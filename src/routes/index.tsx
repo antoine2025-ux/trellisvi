@@ -274,13 +274,14 @@ function Landing() {
 
         {/* Proof */}
         <Section title="From past cohorts">
-          <div className="grid gap-10 md:grid-cols-3">
-            {testimonials.map(([q, n, r]) => (
+          <div className="grid items-start gap-10 md:grid-cols-3 md:gap-8">
+            {testimonials.map(([q, n, r], i) => (
               <Reveal key={n + r}>
-                <blockquote className="border-t border-border pt-6">
+                <blockquote className={`sticker sticker-${i + 1}`}>
+                  <span className="sticker-tape" aria-hidden="true" />
                   <p className="font-serif text-lg leading-relaxed">{q}</p>
                   <footer className="mt-5 text-sm text-muted-foreground">
-                    <span className="block text-foreground">{n}</span>
+                    <span className="block font-medium text-foreground">{n}</span>
                     {r}
                   </footer>
                 </blockquote>
@@ -291,24 +292,47 @@ function Landing() {
 
         {/* Guarantee */}
         <section className="mx-auto max-w-5xl px-6 py-12">
-          <div className="border-2 border-brown p-8 sm:p-12">
-            <h2 className="text-2xl font-bold md:text-3xl">The guarantee</h2>
-            <p className="mt-5 text-lg font-semibold text-foreground">
-              By the end of week 8, you will have:
-            </p>
-            <ul className="mt-5 max-w-3xl space-y-4 text-lg font-semibold leading-snug text-foreground">
-              <li className="border-l-2 border-brown pl-4">
-                A working system running in production, with a data model you designed and users
-                who aren't you.
+          <div className="guarantee">
+            <h2 className="guarantee-title">The Guarantee</h2>
+            <p className="guarantee-lead">By the end of week 8, you will have:</p>
+            <ol className="guarantee-list">
+              <li>
+                <span className="guarantee-num">01</span>
+                <div>
+                  <strong>Live Software and a Blueprint for Complexity.</strong> You will build
+                  and deploy a functional application for real users. More importantly, you will
+                  leave with the exact architectural blueprint required to scale it into complex
+                  software featuring functional databases, API connections, and integrated AI
+                  agents.
+                </div>
               </li>
-              <li className="border-l-2 border-brown pl-4">
-                A packaged offer with a price on it, and a defined client to sell it to.
+              <li>
+                <span className="guarantee-num">02</span>
+                <div>
+                  <strong>Mastery Over AI Limitations:</strong> You will know exactly why AI
+                  coding tools look deceptively easy but fail to extract real value on complex
+                  builds, and how to use Trellis VI to completely bypass those roadblocks.
+                </div>
               </li>
-            </ul>
-            <p className="mt-8 max-w-3xl font-serif text-xl italic leading-snug text-foreground">
-              Do the work, hit the week 4 checkpoint, and if you don't have both, you get
-              every euro back.
-            </p>
+              <li>
+                <span className="guarantee-num">03</span>
+                <div>
+                  <strong>A Client-Acquisition Strategy:</strong> You will not just learn to
+                  build; you will leave with a packaged, priced offer, a defined target client,
+                  and the exact strategy to put yourself out there and close them.
+                </div>
+              </li>
+            </ol>
+            <div className="guarantee-promise">
+              <p className="guarantee-promise-title">
+                The Checkpoint Promise or{" "}
+                <span className="guarantee-money">your money back</span>
+              </p>
+              <p className="guarantee-promise-body">
+                Do the work, hit the week 4 checkpoint, and if you don't possess all three of
+                these assets, you get every euro back.
+              </p>
+            </div>
           </div>
         </section>
 

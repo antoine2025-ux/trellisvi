@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { WeekSketch } from "@/components/WeekSketches";
 
 const weeks = [
   {
@@ -82,19 +83,22 @@ function WeekItem({ week }: { week: (typeof weeks)[number] }) {
         <span className="weeks-node" />
       </div>
       <p className="weeks-num">{week.n}</p>
-      <div className="min-w-0">
-        <h3 className="text-[1.625rem] font-bold leading-[1.12] sm:text-[33px] md:text-[45px]">
-          {week.title}
-        </h3>
-        <p className="mt-4 max-w-[46rem] text-lg font-semibold leading-[1.6] text-foreground md:text-xl">
-          {week.body}
-        </p>
-        <p className="mt-4 max-w-[46rem] font-serif text-xl italic leading-snug text-foreground md:text-2xl">
-          Outcome: {week.outcome}
-        </p>
-        {week.business ? (
-          <p className="mt-3 font-medium text-brown md:text-lg">{week.business}</p>
-        ) : null}
+      <div className="weeks-copy">
+        <div className="min-w-0">
+          <h3 className="text-[1.625rem] font-bold leading-[1.12] sm:text-[33px] md:text-[45px]">
+            {week.title}
+          </h3>
+          <p className="mt-4 max-w-[46rem] text-lg font-semibold leading-[1.6] text-foreground md:text-xl">
+            {week.body}
+          </p>
+          <p className="mt-4 max-w-[46rem] font-serif text-xl italic leading-snug text-foreground md:text-2xl">
+            Outcome: {week.outcome}
+          </p>
+          {week.business ? (
+            <p className="mt-3 font-medium text-brown md:text-lg">{week.business}</p>
+          ) : null}
+        </div>
+        <WeekSketch n={week.n} />
       </div>
     </li>
   );
