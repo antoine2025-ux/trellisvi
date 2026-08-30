@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
+import { PrivacyPolicy, openPrivacyPolicy } from "@/components/PrivacyPolicy";
+import { Terms, openTerms } from "@/components/Terms";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -11,20 +13,32 @@ export const Route = createFileRoute("/blog")({
       },
     ],
   }),
-  component: BlogPage,
+  component: BlogLayout,
 });
 
-function BlogPage() {
+function BlogLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-6 pb-24 pt-10 sm:pt-16">
-        <h1 className="text-4xl font-bold leading-[1.12] sm:text-5xl md:text-6xl">Blog</h1>
-        <p className="mt-6 max-w-2xl text-lg font-semibold leading-relaxed text-muted-foreground">
-          Notes on AI-assisted systems architecture, context engineering, and shipping
-          software that lasts past the demo.
-        </p>
-      </main>
+      <Outlet />
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <span>{new Date().getFullYear()} PowerIntel - trading name of ACMPOWER OÜ</span>
+          <nav className="flex gap-6">
+            <a href="mailto:trellis@powerintel.co" className="hover:text-foreground">
+              trellis@powerintel.co
+            </a>
+            <button type="button" className="hover:text-foreground" onClick={openPrivacyPolicy}>
+              Privacy
+            </button>
+            <button type="button" className="hover:text-foreground" onClick={openTerms}>
+              Terms
+            </button>
+          </nav>
+        </div>
+      </footer>
+      <PrivacyPolicy />
+      <Terms />
     </div>
   );
 }
