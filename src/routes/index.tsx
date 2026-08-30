@@ -18,20 +18,35 @@ import instructorPhoto from "@/assets/instructor.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "The Practitioner Program — Eight-Week AI Build Cohort" },
+      { title: "Learn to build with Trellis VI - AI assisted development course" },
       {
         name: "description",
         content:
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting. Limited seats.",
       },
-      { property: "og:title", content: "The Practitioner Program — Eight-Week AI Build Cohort" },
+      { property: "og:title", content: "Learn to build with Trellis VI - AI assisted development course" },
       {
         property: "og:description",
         content:
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://trellistudio.tech/" },
+      { property: "og:site_name", content: "Trellis VI" },
+      { property: "og:image", content: "https://trellistudio.tech/og-hero.png" },
+      { property: "og:image:secure_url", content: "https://trellistudio.tech/og-hero.png" },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Ship real software in 8 weeks. Not another demo." },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Learn to build with Trellis VI - AI assisted development course" },
+      {
+        name: "twitter:description",
+        content:
+          "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
+      },
+      { name: "twitter:image", content: "https://trellistudio.tech/og-hero.png" },
     ],
   }),
   component: Landing,

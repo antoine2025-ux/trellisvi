@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Trellis VI — Eight-Week AI Build Cohort" },
+      { title: "Learn to build with Trellis VI - AI assisted development course" },
       { name: "description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
       { name: "author", content: "PowerIntel" },
-      { property: "og:title", content: "Trellis VI — Eight-Week AI Build Cohort" },
+      { property: "og:title", content: "Learn to build with Trellis VI - AI assisted development course" },
       { property: "og:description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
