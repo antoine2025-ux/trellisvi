@@ -9,11 +9,13 @@ import {
 import { Reveal, StaggerStack } from "@/components/Reveal";
 import { HeroKicker } from "@/components/HeroKicker";
 import { WallSection } from "@/components/WallSection";
+import { ComparisonSection } from "@/components/ComparisonSection";
 import { WeeksTimeline } from "@/components/WeeksTimeline";
 import { ApplicationForm } from "@/components/ApplicationForm";
 import { GatedVideo } from "@/components/GatedVideo";
 import { PrivacyPolicy, openPrivacyPolicy } from "@/components/PrivacyPolicy";
 import { Terms, openTerms } from "@/components/Terms";
+import { SiteHeader } from "@/components/SiteHeader";
 import instructorPhoto from "@/assets/instructor.jpg";
 
 export const Route = createFileRoute("/")({
@@ -83,7 +85,7 @@ const notForYou = [
   "You're looking for a magic button",
   "You're not particularly interested in building with AI",
   "You don't have at least basic computer skills",
-  "You want a done for you agency engagement",
+  "You're only looking to learn the basics to build landing pages or simple sites",
 ];
 
 const testimonials: [string, string, string][] = [
@@ -115,9 +117,7 @@ const faqs: [string, string][] = [
 function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="mx-auto max-w-5xl px-6 py-8">
-        <span className="font-serif text-lg tracking-tight">Trellis VI Studio</span>
-      </header>
+      <SiteHeader />
 
       <main>
         {/* Hero */}
@@ -163,6 +163,10 @@ function Landing() {
         <Divider />
 
         <WallSection />
+
+        <Divider />
+
+        <ComparisonSection />
 
         <Divider />
 

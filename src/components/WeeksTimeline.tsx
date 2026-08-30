@@ -4,56 +4,66 @@ import { WeekSketch } from "@/components/WeekSketches";
 const weeks = [
   {
     n: "01",
-    title: "The Big Picture of Software.",
-    body: "Decoding the jargon, front-end, back-end, databases, and APIs, into plain English.",
+    title: "Systems Architecture First",
+    shift:
+      "Stop treating AI as a magic box. Learn the Technical Program Manager (TPM) methodology to sketch relational data models, API limits, and backend logic before generating any code.",
     outcome:
-      "You can confidently sketch exactly how your system connects on a napkin before you build it.",
+      "You will architect a bulletproof system blueprint that dictates exactly how the AI will build your app.",
   },
   {
     n: "02",
-    title: "Your Workspace & First Launch.",
-    body: "Setting up your digital tools (like Trellis) and getting comfortable making them work together.",
-    outcome: "You will ship a basic, working project to a real public URL by week two.",
+    title: "The Trellis Context Environment",
+    shift:
+      "Ditch chaotic chat windows. You will set up your digital workspace using the exact Trellis project setup, integrating automated GitHub context syncing and initial project bootstrap artifacts.",
+    outcome:
+      "You ship a baseline project to a live public URL, fully wired for persistent AI context.",
   },
   {
     n: "03",
-    title: "Wrangling the AI.",
-    body: "Why AI gets easily confused during complex tasks, and how to keep it focused.",
+    title: "Context Engineering & AI Orchestration",
+    shift:
+      "Learn why AI models suffer from amnesia and how to prevent it. You will implement RULES.md, define stable architectural seams, and master Cursor-to-Claude session handoff protocols.",
     outcome:
-      "You can successfully guide the AI to build large projects over multiple days without it losing the plot.",
+      "You can direct AI agents to build multi-day, complex features without the codebase collapsing.",
   },
   {
     n: "04",
-    title: "Saving Data.",
-    body: "How apps remember user information, and how to organize it right so it doesn't collapse later.",
-    outcome: "Your app gets a custom, working database.",
-    business: "Business Track opens: Identifying your ideal customer.",
+    title: "Relational Data & State Management",
+    shift:
+      "AI is notoriously bad at unprompted schema design. Learn to build and enforce strict database structures (via Supabase) that scale seamlessly.",
+    outcome: "A production-ready custom database.",
+    business: "Defining your high-ticket freelance ICP (Ideal Customer Profile).",
   },
   {
     n: "05",
-    title: "Professional Hosting.",
-    body: "Connecting the heavy-duty plumbing (like Vercel and Supabase) to keep your app running smoothly and securely.",
-    outcome: "Your project is wired up and ready to launch on demand.",
-    business: "Business Track: Structuring your offer and its price.",
+    title: "Production Infrastructure & CI/CD",
+    shift:
+      "Moving from a local prototype to a secure, live environment. Connect heavy-duty plumbing like Vercel, manage environment variables securely, and handle authentication.",
+    outcome: "Your application is wired for professional user traffic.",
+    business: "Structuring your automation and maintenance retainer pricing.",
   },
   {
     n: "06",
-    title: "Fixing Things When They Break.",
-    body: "Stop endlessly re-prompting. Learn to actually read and fix errors in code you didn't write.",
-    outcome: "You can confidently troubleshoot live bugs instead of starting over.",
-    business: "Business Track: Nailing your first client conversations.",
+    title: "Advanced Debugging & Log Reading",
+    shift:
+      "Stop blindly re-prompting errors. Learn to read server logs, identify failure points in AI-generated code, and issue surgical, targeted fixes.",
+    outcome: "You can confidently troubleshoot live production bugs.",
+    business: "Mastering the mid-market client sales conversation.",
   },
   {
     n: "07",
-    title: "The Build Sprint.",
-    body: "A live, hackathon-style workshop with real-time feedback on your project.",
-    outcome: "Your custom software is fully built, real, and working.",
+    title: "The Production Sprint",
+    shift:
+      "A live, structured hackathon executing the audit-prompt-implement-audit-fix loop. Receive real-time architectural feedback on your specific build.",
+    outcome: "Your custom software is real, functional, and deployed.",
   },
   {
     n: "08",
-    title: "Portfolio & Pitch.",
-    body: "Packaging your finished software as undeniable proof of your new skills, then using it to win work.",
-    outcome: "You leave with a polished portfolio and all course guarantees fulfilled.",
+    title: "The Agency Launch",
+    shift:
+      "Transition from builder to business owner. Package your live software as undeniable proof of your engineering capability.",
+    outcome:
+      "You leave with a polished technical portfolio and your first live client proposals underway.",
   },
 ];
 
@@ -89,13 +99,15 @@ function WeekItem({ week }: { week: (typeof weeks)[number] }) {
             {week.title}
           </h3>
           <p className="mt-4 max-w-[46rem] text-lg font-semibold leading-[1.6] text-foreground md:text-xl">
-            {week.body}
+            The Shift: {week.shift}
           </p>
           <p className="mt-4 max-w-[46rem] font-serif text-xl italic leading-snug text-foreground md:text-2xl">
             Outcome: {week.outcome}
           </p>
           {week.business ? (
-            <p className="mt-3 font-medium text-brown md:text-lg">{week.business}</p>
+            <p className="mt-3 font-medium text-brown md:text-lg">
+              Business Track: {week.business}
+            </p>
           ) : null}
         </div>
         <WeekSketch n={week.n} />
