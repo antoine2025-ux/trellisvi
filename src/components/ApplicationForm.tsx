@@ -193,7 +193,18 @@ const REQUIRED_FIELDS = [
 
 export function ApplicationForm() {
   const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [formKey, setFormKey] = useState(0);
   const sendApplication = useServerFn(submitApplication);
+
+  function refreshForm() {
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setFormKey((key) => key + 1);
+    setSent(true);
+    window.setTimeout(() => setSent(false), reduced ? 500 : 2200);
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -239,10 +250,7 @@ export function ApplicationForm() {
     setSubmitting(true);
     try {
       await sendApplication({ data: parsed.data });
-      toast.success("Application received", {
-        description: "We reply to every application within three working days.",
-      });
-      form.reset();
+      refreshForm();
     } catch {
       toast.error("We could not send your application.", {
         description: "Email trellis@powerintel.co and we will take it from there.",
@@ -264,12 +272,14 @@ export function ApplicationForm() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      onInput={clearValidity}
-      onChange={clearValidity}
-      className="space-y-6 rounded-[2.25rem] border border-border bg-card p-6 sm:p-10"
-    >
+    <div className={`application-form-wrap${sent ? " is-sent" : ""}`}>
+      <form
+        key={formKey}
+        onSubmit={onSubmit}
+        onInput={clearValidity}
+        onChange={clearValidity}
+        className="application-form space-y-6 rounded-[2.25rem] border border-border bg-card p-6 sm:p-10"
+      >
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="name">
@@ -389,6 +399,17 @@ export function ApplicationForm() {
         Our goal is only to accept students who we are confident will extract real, measurable
         value from the program.
       </p>
-    </form>
+      </form>
+      <div className="application-sent" aria-live="polite" aria-atomic="true">
+        <div className="application-letter" aria-hidden="true">
+          <span className="application-letter-flap" />
+          <span className="application-letter-body">
+            <span className="application-letter-stamp">VI</span>
+            <span className="application-letter-address">Trellis VI</span>
+          </span>
+        </div>
+        <p className="application-sent-copy">Application sent</p>
+      </div>
+    </div>
   );
 }
