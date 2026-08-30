@@ -1,9 +1,12 @@
 import { useState, type FormEvent, type ReactNode } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { applicationSchema } from "@/lib/application";
+import { submitApplication } from "@/lib/submit-application";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -190,8 +193,9 @@ const REQUIRED_FIELDS = [
 
 export function ApplicationForm() {
   const [submitting, setSubmitting] = useState(false);
+  const sendApplication = useServerFn(submitApplication);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -213,15 +217,39 @@ export function ApplicationForm() {
       }
     }
 
+    const parsed = applicationSchema.safeParse({
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      country: String(data.get("country") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      job: String(data.get("job") ?? ""),
+      experience: String(data.get("experience") ?? ""),
+      tools: String(data.get("tools") ?? ""),
+      commit: String(data.get("commit") ?? ""),
+      q1: String(data.get("q1") ?? ""),
+      q2: String(data.get("q2") ?? ""),
+      q3: String(data.get("q3") ?? ""),
+    });
+
+    if (!parsed.success) {
+      toast.error("Check the form and try again.");
+      return;
+    }
+
     setSubmitting(true);
-    // [PLACEHOLDER] Wire this to your application inbox or CRM.
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      await sendApplication({ data: parsed.data });
       toast.success("Application received", {
-        description: "[Placeholder] We reply to every application within three working days.",
+        description: "We reply to every application within three working days.",
       });
       form.reset();
-    }, 400);
+    } catch {
+      toast.error("We could not send your application.", {
+        description: "Email trellis@powerintel.co and we will take it from there.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function clearValidity(e: FormEvent<HTMLFormElement>) {

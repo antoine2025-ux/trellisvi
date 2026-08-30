@@ -10,6 +10,9 @@ import { Reveal, StaggerStack } from "@/components/Reveal";
 import { WallSection } from "@/components/WallSection";
 import { WeeksTimeline } from "@/components/WeeksTimeline";
 import { ApplicationForm } from "@/components/ApplicationForm";
+import { GatedVideo } from "@/components/GatedVideo";
+import { PrivacyPolicy, openPrivacyPolicy } from "@/components/PrivacyPolicy";
+import { Terms, openTerms } from "@/components/Terms";
 import instructorPhoto from "@/assets/instructor.jpg";
 
 export const Route = createFileRoute("/")({
@@ -80,14 +83,14 @@ const testimonials: [string, string, string][] = [
   ],
   [
     "I've used AI for several years. For simple apps, Cursor worked pretty well but as soon as I aimed at more complex code, it was almost impossible to deploy anything in production that would either work properly or work at all. I've spent a considerable amount of money on learning AI skills but the Trellis VI goes beyond that as it teaches you all its silent limitations and how to work around them to produce something meaningful. I can't recommend it enough.",
-    "Placeholder Name",
-    "Independent consultant",
+    "William D.",
+    "Staff Product Manager",
   ],
 ];
 
 const faqs: [string, string][] = [
   ["How much time per week?", "10 to 15 hours a week is the recommendation but it all depends on your learning pace. 1,5 to 2 hours a day is where we observe the fastest learning outcome."],
-  ["Do I need to be a strong programmer?", "No, you don't need to be a programmer, but it does help to have basic non technical project management knowledge at minimum. If you have never touched a computer before, nor worked in any capacity that required some level of problem solving, this course may not be for you."],
+  ["Do I need to know anything about programming?", "No, you don't need to be a programmer, but it does help to have basic non technical project management knowledge at minimum. If you have never touched a computer before, nor worked in any capacity that required some level of problem solving, this course may not be for you."],
   ["Are the sessions recorded?", "Yes, weekly live Q&A will be recorded with lifetime access."],
   ["What if I miss a week?", "Access to the course is open for 10 weeks from the start. The modules are relatively short, the practical work is what takes more time. Losing a week does not mean you'll be too behind to catch up, but we strongly recommend you to organize your schedule so that you can commit to the full 8 weeks without interruption."],
   ["How large is a cohort?", "Each cohort is capped at 20 seats. This is to ensure we can support each member where needed, since the practical work will be reviewed individually."],
@@ -134,19 +137,11 @@ function Landing() {
         {/* Video */}
         <section className="mx-auto max-w-5xl px-6 py-20">
           <Reveal>
-            <p className="mb-6 text-center text-sm text-muted-foreground">
-              [Placeholder caption] Twelve minutes on what the program is and who it is not for.
+            <p className="mb-6 text-center text-lg text-muted-foreground md:text-xl">
+              12 minutes on what the program is, what you leave with, and who it's
+              absolutely not for.
             </p>
-            <div className="aspect-video w-full overflow-hidden border border-border bg-card">
-              <iframe
-                className="h-full w-full"
-                src="https://www.youtube.com/embed/aqz-KE-bpKQ"
-                title="Program introduction (placeholder video)"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+            <GatedVideo />
           </Reveal>
         </section>
 
@@ -338,16 +333,43 @@ function Landing() {
 
         {/* Price + application */}
         <section id="apply" className="mx-auto max-w-5xl scroll-mt-8 px-6 py-20">
-          <div className="grid gap-12 md:grid-cols-[minmax(0,20rem)_1fr] md:gap-16">
+          <div className="grid gap-12 md:grid-cols-[minmax(0,22rem)_1fr] md:gap-16">
             <div>
               <h2 className="text-3xl">Price and application</h2>
               <p className="mt-6 font-serif text-4xl">$2,499</p>
-              <ul className="mt-8 space-y-3 text-muted-foreground">
-                <li className="border-b border-border pb-3">Eight live sessions</li>
-                <li className="border-b border-border pb-3">Weekly project review</li>
-                <li className="border-b border-border pb-3">Permanent recordings</li>
-                <li className="border-b border-border pb-3">Private cohort group</li>
-              </ul>
+              <div className="perk-slip-stack">
+                <aside className="perk-slip perk-slip-course" aria-label="What's in the course">
+                  <p className="perk-slip-label">The course</p>
+                  <ol className="perk-slip-items">
+                    <li>
+                      <span className="perk-slip-num">01</span>
+                      Eight live sessions
+                    </li>
+                    <li>
+                      <span className="perk-slip-num">02</span>
+                      Weekly project review
+                    </li>
+                    <li>
+                      <span className="perk-slip-num">03</span>
+                      Permanent recordings
+                    </li>
+                    <li>
+                      <span className="perk-slip-num">04</span>
+                      Private cohort group
+                    </li>
+                  </ol>
+                </aside>
+                <aside className="perk-slip" aria-label="2 months of Claude Max">
+                  <p className="perk-slip-label">Also included</p>
+                  <p className="perk-slip-title">2 months of Claude Max</p>
+                  <p className="perk-slip-note">Included when you join.</p>
+                </aside>
+                <aside className="perk-slip" aria-label="Lifetime access to the community groups">
+                  <p className="perk-slip-label">Also included</p>
+                  <p className="perk-slip-title">Lifetime access to the community groups</p>
+                  <p className="perk-slip-note">Included when you join.</p>
+                </aside>
+              </div>
               <p className="mt-8 text-sm text-muted-foreground">
                 Limited seats. Application only.
               </p>
@@ -375,20 +397,22 @@ function Landing() {
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Placeholder Studio Ltd.</span>
+          <span>{new Date().getFullYear()} PowerIntel - trading name of ACMPOWER OÜ</span>
           <nav className="flex gap-6">
-            <a href="mailto:hello@placeholder.com" className="hover:text-foreground">
-              hello@placeholder.com
+            <a href="mailto:trellis@powerintel.co" className="hover:text-foreground">
+              trellis@powerintel.co
             </a>
-            <a href="#" className="hover:text-foreground">
+            <button type="button" className="hover:text-foreground" onClick={openPrivacyPolicy}>
               Privacy
-            </a>
-            <a href="#" className="hover:text-foreground">
+            </button>
+            <button type="button" className="hover:text-foreground" onClick={openTerms}>
               Terms
-            </a>
+            </button>
           </nav>
         </div>
       </footer>
+      <PrivacyPolicy />
+      <Terms />
     </div>
   );
 }
