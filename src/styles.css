@@ -68,6 +68,13 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+#lovable-badge,
+#lovable-badge-container,
+[id*="lovable-badge"],
+[data-lovable-badge] {
+  display: none !important;
+}
+
 :root {
   --radius: 0.25rem;
   --background: oklch(0.957 0.014 84);

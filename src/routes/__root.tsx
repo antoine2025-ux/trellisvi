@@ -78,14 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Trellis VI — Eight-Week AI Build Cohort" },
+      { name: "description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
+      { name: "author", content: "PowerIntel" },
+      { property: "og:title", content: "Trellis VI — Eight-Week AI Build Cohort" },
+      { property: "og:description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -98,9 +97,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "32x32" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "icon", href: "/powerintel-favicon.svg?v=2", type: "image/svg+xml" },
+      { rel: "icon", href: "/powerintel-favicon.png?v=2", type: "image/png", sizes: "32x32" },
+      { rel: "shortcut icon", href: "/powerintel-favicon.png?v=2", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/powerintel-apple-touch.png?v=2" },
     ],
   }),
 
