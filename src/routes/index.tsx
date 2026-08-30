@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Reveal, StaggerStack } from "@/components/Reveal";
+import { HeroKicker } from "@/components/HeroKicker";
 import { WallSection } from "@/components/WallSection";
 import { WeeksTimeline } from "@/components/WeeksTimeline";
 import { ApplicationForm } from "@/components/ApplicationForm";
@@ -121,17 +122,16 @@ function Landing() {
       <main>
         {/* Hero */}
         <section className="mx-auto max-w-5xl px-6 pb-20 pt-10 sm:pt-20">
-          <p className="mb-8 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Trellis VI AI assisted development 8-week course
-          </p>
+          <HeroKicker />
           <h1 className="max-w-3xl text-5xl font-bold leading-[1.12] sm:text-6xl md:text-7xl">
             Ship{" "}
             <span className="text-word-gradient">real</span> software in 8 weeks.
             Not another demo.
           </h1>
           <p className="mt-8 max-w-2xl text-lg font-semibold leading-relaxed text-foreground">
-            You'll learn the framework I use with paying clients, and finish with something
-            running in production.
+            Move past prompt engineering. Master the exact Technical Program Management
+            framework used to orchestrate AI agents, design scalable architectures, and
+            deliver custom software for high-ticket retainer clients.
           </p>
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Antoine Morlet.</span> Ex Wise. Ex
@@ -303,44 +303,44 @@ function Landing() {
         {/* Guarantee */}
         <section className="mx-auto max-w-5xl px-6 py-12">
           <div className="guarantee">
-            <h2 className="guarantee-title">The Guarantee</h2>
-            <p className="guarantee-lead">By the end of week 8, you will have:</p>
+            <h2 className="guarantee-title">The Week 4 Checkpoint Guarantee</h2>
+            <p className="guarantee-lead">
+              We treat this cohort like a serious engineering environment, not a passive video
+              course. By Week 4, you will hit our Midway Operational Checkpoint, where you will
+              have successfully built:
+            </p>
             <ol className="guarantee-list">
               <li>
                 <span className="guarantee-num">01</span>
                 <div>
-                  <strong>Live Software and a Blueprint for Complexity.</strong> You will build
-                  and deploy a functional application for real users. More importantly, you will
-                  leave with the exact architectural blueprint required to scale it into complex
-                  software featuring functional databases, API connections, and integrated AI
-                  agents.
+                  <strong>Core Context &amp; Architecture Setup:</strong> Your project repo
+                  wired with automated context files preventing AI context collapse.
                 </div>
               </li>
               <li>
                 <span className="guarantee-num">02</span>
                 <div>
-                  <strong>Mastery Over AI Limitations:</strong> You will know exactly why AI
-                  coding tools look deceptively easy but fail to extract real value on complex
-                  builds, and how to use Trellis VI to completely bypass those roadblocks.
+                  <strong>Working Data Layer:</strong> A custom-designed database schema running
+                  live in Supabase—not a temporary prototype.
                 </div>
               </li>
               <li>
                 <span className="guarantee-num">03</span>
                 <div>
-                  <strong>A Client-Acquisition Strategy:</strong> You will not just learn to
-                  build; you will leave with a packaged, priced offer, a defined target client,
-                  and the exact strategy to put yourself out there and close them.
+                  <strong>The Offer Draft:</strong> A clearly defined target client and initial
+                  service package for your freelance business.
                 </div>
               </li>
             </ol>
             <div className="guarantee-promise">
               <p className="guarantee-promise-title">
-                The Checkpoint Promise or{" "}
-                <span className="guarantee-money">your money back</span>
+                The Checkpoint Promise{" "}
+                <span className="guarantee-money">(or your money back)</span>
               </p>
               <p className="guarantee-promise-body">
-                Do the work, hit the week 4 checkpoint, and if you don't possess all three of
-                these assets, you get every euro back.
+                Do the work, complete the assignments, and hit the Week 4 checkpoint. If you
+                don't possess these three foundational assets, or you don't feel the framework
+                will get you to a production build by Week 8, we refund your investment in full.
               </p>
             </div>
           </div>

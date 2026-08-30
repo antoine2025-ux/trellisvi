@@ -69,24 +69,23 @@ export function Terms() {
         <h3>The Checkpoint refund guarantee</h3>
         <p>
           Refunds are not granted because you changed your mind or got too
-          busy. To be eligible for a refund under our guarantee, you must hit
-          the Week 4 Checkpoint. This means you must explicitly prove you have
-          completed all assigned coursework, attended the required sessions,
-          and built the foundational systems up to that point. If you do the
-          work and still do not possess the promised artifacts, you are
-          eligible for the refund.
+          busy. To be eligible for a refund under our guarantee, you must do
+          the work, complete the assignments, and hit the Week 4 checkpoint.
+          If you do not possess the promised artifacts, or you do not feel
+          the framework will get you to a production build by Week 8, you are
+          eligible for a full refund.
         </p>
         <p>
-          The promised artifacts are the three outcomes named in The Guarantee
-          on this site: a live system with an architectural blueprint, the
-          ability to work around the limits of AI coding tools using Trellis
-          VI, and a packaged, priced offer with a defined client and a way to
-          close them.
+          The promised artifacts are the three Week 4 outcomes named in The
+          Guarantee on this site: a project repo wired with automated context
+          files, a custom-designed database schema running live in Supabase,
+          and a drafted offer with a defined target client and an initial
+          service package.
         </p>
 
         <h3>Third-party cost exclusions</h3>
         <p>
-          If you are deemed eligible for a refund under the Week 4 Checkpoint
+          If you are deemed eligible for a refund under the Checkpoint
           guarantee, the final amount returned to you will exclude any hard
           costs we have already incurred to purchase external software licenses
           or subscriptions on your behalf (such as a Claude Max subscription).

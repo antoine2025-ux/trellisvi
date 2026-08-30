@@ -36,20 +36,39 @@ export function WallSection() {
       ref={ref}
       className={`wall-scene mx-auto max-w-5xl px-6 py-20${playing ? " is-playing" : ""}`}
     >
-      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,55fr)_minmax(0,45fr)] md:gap-12">
+      <div className="grid items-start gap-10 md:grid-cols-[minmax(0,55fr)_minmax(0,45fr)] md:gap-12">
         <div className="max-md:order-2">
-          <h2 className="text-4xl font-bold leading-[1.12] sm:text-5xl md:text-6xl">The wall</h2>
+          <h2 className="text-4xl font-bold leading-[1.12] sm:text-5xl md:text-6xl">
+            The Wall of Vibecoding
+          </h2>
           <div className="mt-8 max-w-[60ch] space-y-5 text-lg font-semibold leading-[1.7] text-foreground">
             <p>
-              Tools like Claude, Cursor and Lovable have become extraordinary. A model that once
-              drafted an email now writes whole systems, reads your codebase, and fixes its own
-              mistakes.
+              Tools like Claude, Cursor, and Lovable are extraordinary. Anyone can prompt their way
+              to a shiny, single-page demo in an afternoon. But the magic stops at 80%.
             </p>
             <p>
-              Anyone can prompt their way to a demo. What you still can't prompt through is a data
-              model you've never designed, a failure you can't read, or an architecture decision
-              you didn't know you were making.
+              When you try to add a database, integrate complex APIs, or scale past a few files, you
+              hit the wall. The AI loses context, overwrites working logic, and hallucinates fixes
+              that break two other features.
             </p>
+            <ul className="space-y-4">
+              {[
+                "You can't prompt your way through a data model you've never designed.",
+                "You can't fix a deployment failure in server logs you don't know how to read.",
+                "You can't protect high-blast-radius files without defining and enforcing stable architectural seams.",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="grid grid-cols-[0.85rem_1fr] gap-3"
+                >
+                  <span
+                    className="mt-[0.85em] h-1.5 w-1.5 rounded-full bg-brown"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -126,7 +145,11 @@ export function WallSection() {
       <div className="mt-14">
         <div className="h-[3px] w-10 bg-brown" aria-hidden="true" />
         <p className="mt-6 font-serif text-[28px] italic leading-snug text-foreground md:text-[36px]">
-          Power tools didn't make everyone a builder. They made bad building faster.
+          Giving someone a commercial kitchen doesn't make them a head chef.
+          <span className="mt-3 block pl-10 md:pl-16">
+            AI power tools didn't turn everyone into a systems architect. They just
+            made bad building faster.
+          </span>
         </p>
       </div>
     </section>
