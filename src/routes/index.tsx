@@ -101,7 +101,7 @@ const testimonials: [string, string, string][] = [
   ],
   [
     "I've used AI for several years. For simple apps, Cursor worked pretty well but as soon as I aimed at more complex code, it was almost impossible to deploy anything in production that would either work properly or work at all. I've spent a considerable amount of money on learning AI skills but the Trellis VI goes beyond that as it teaches you all its silent limitations and how to work around them to produce something meaningful. I can't recommend it enough.",
-    "William D.",
+    "William C.",
     "Staff Product Manager",
   ],
 ];
