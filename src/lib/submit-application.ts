@@ -62,6 +62,7 @@ export const submitApplication = createServerFn({ method: "POST" })
         reply_to: INBOX,
         subject: applicant.subject,
         text: applicant.text,
+        html: applicant.html,
       });
     } catch (error) {
       console.error("Resend rejected the applicant outcome email", error);
