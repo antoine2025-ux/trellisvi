@@ -43,6 +43,10 @@ export const homepageJsonLd = {
       email: "trellis@powerintel.co",
       address: {
         "@type": "PostalAddress",
+        streetAddress: "Lille tn 27-9",
+        addressLocality: "Tallinn",
+        addressRegion: "Harju maakond",
+        postalCode: "10614",
         addressCountry: "EE",
       },
       areaServed: "Worldwide",
