@@ -7,8 +7,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const linkClass = "hover:text-foreground";
-const activeClass = "text-foreground";
+const linkClass = "whitespace-nowrap font-semibold text-foreground hover:text-brown";
+const activeClass = "text-brown";
 
 const builtWith = [
   { name: "Loopwell", href: "https://www.loopwell.io" },
@@ -23,7 +23,7 @@ export function SiteHeader() {
       </Link>
       <nav
         aria-label="Site"
-        className="flex items-center gap-3 text-sm text-muted-foreground"
+        className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 text-lg text-foreground"
       >
         <Link
           to="/blog"
@@ -33,11 +33,11 @@ export function SiteHeader() {
         >
           Blog
         </Link>
-        <span aria-hidden="true">|</span>
+        <span aria-hidden="true" className="font-normal text-muted-foreground">|</span>
         <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center gap-1 bg-transparent text-sm text-muted-foreground outline-none hover:text-foreground data-[state=open]:text-foreground">
+          <DropdownMenuTrigger className="inline-flex items-center gap-1 bg-transparent text-lg font-semibold text-foreground outline-none hover:text-brown data-[state=open]:text-brown">
             Built with Trellis VI
-            <ChevronDown className="size-3.5 opacity-70" aria-hidden="true" />
+            <ChevronDown className="size-4 opacity-80" aria-hidden="true" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
@@ -58,6 +58,30 @@ export function SiteHeader() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+        <span aria-hidden="true" className="font-normal text-muted-foreground">|</span>
+        <Link
+          to="/community"
+          className={linkClass}
+          activeProps={{ className: activeClass }}
+        >
+          Community
+        </Link>
+        <span aria-hidden="true" className="font-normal text-muted-foreground">|</span>
+        <Link
+          to="/resources"
+          className={linkClass}
+          activeProps={{ className: activeClass }}
+        >
+          Free resources
+        </Link>
+        <span aria-hidden="true" className="font-normal text-muted-foreground">|</span>
+        <Link
+          to="/login"
+          className={linkClass}
+          activeProps={{ className: activeClass }}
+        >
+          Course login
+        </Link>
       </nav>
     </header>
   );

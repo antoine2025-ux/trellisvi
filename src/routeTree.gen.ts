@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BuiltRouteImport } from './routes/built'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
@@ -30,6 +33,21 @@ const BuiltRoute = BuiltRouteImport.update({
   path: '/built',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -45,12 +63,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/built': typeof BuiltRoute
+  '/community': typeof CommunityRoute
+  '/login': typeof LoginRoute
+  '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/built': typeof BuiltRoute
+  '/community': typeof CommunityRoute
+  '/login': typeof LoginRoute
+  '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
 }
@@ -59,21 +83,51 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/built': typeof BuiltRoute
+  '/community': typeof CommunityRoute
+  '/login': typeof LoginRoute
+  '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/built' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/blog'
+    | '/built'
+    | '/community'
+    | '/login'
+    | '/resources'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/built' | '/blog/$slug' | '/blog'
-  id: '__root__' | '/' | '/blog' | '/built' | '/blog/$slug' | '/blog/'
+  to:
+    | '/'
+    | '/built'
+    | '/community'
+    | '/login'
+    | '/resources'
+    | '/blog/$slug'
+    | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/blog'
+    | '/built'
+    | '/community'
+    | '/login'
+    | '/resources'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRouteWithChildren
   BuiltRoute: typeof BuiltRoute
+  CommunityRoute: typeof CommunityRoute
+  LoginRoute: typeof LoginRoute
+  ResourcesRoute: typeof ResourcesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -97,6 +151,27 @@ declare module '@tanstack/react-router' {
       path: '/built'
       fullPath: '/built'
       preLoaderRoute: typeof BuiltRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -132,6 +207,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRouteWithChildren,
   BuiltRoute: BuiltRoute,
+  CommunityRoute: CommunityRoute,
+  LoginRoute: LoginRoute,
+  ResourcesRoute: ResourcesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
