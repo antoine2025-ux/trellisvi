@@ -1,144 +1,64 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { applicationSchema } from "@/lib/application";
+import {
+  applicationSchema,
+  CAPITAL_LABELS,
+  PAIN_LABELS,
+  TIME_LABELS,
+  qualifyApplication,
+  unqualifiedReasons,
+  type Application,
+  type ApplicationLane,
+} from "@/lib/application";
 import { submitApplication } from "@/lib/submit-application";
+import { hasVideoLeadContact, readVideoLead, subscribeVideoLead, writeVideoLead } from "@/lib/video-lead";
+import type { VideoLead } from "@/lib/video-lead";
 
-const COUNTRIES = [
-  "Afghanistan",
-  "Albania",
-  "Algeria",
-  "Andorra",
-  "Angola",
-  "Argentina",
-  "Armenia",
-  "Australia",
-  "Austria",
-  "Azerbaijan",
-  "Bahamas",
-  "Bahrain",
-  "Bangladesh",
-  "Barbados",
-  "Belarus",
-  "Belgium",
-  "Belize",
-  "Benin",
-  "Bhutan",
-  "Bolivia",
-  "Bosnia and Herzegovina",
-  "Botswana",
-  "Brazil",
-  "Brunei",
-  "Bulgaria",
-  "Burkina Faso",
-  "Cambodia",
-  "Cameroon",
-  "Canada",
-  "Chile",
-  "China",
-  "Colombia",
-  "Costa Rica",
-  "Croatia",
-  "Cuba",
-  "Cyprus",
-  "Czechia",
-  "Denmark",
-  "Dominican Republic",
-  "Ecuador",
-  "Egypt",
-  "El Salvador",
-  "Estonia",
-  "Ethiopia",
-  "Finland",
-  "France",
-  "Georgia",
-  "Germany",
-  "Ghana",
-  "Greece",
-  "Guatemala",
-  "Honduras",
-  "Hong Kong",
-  "Hungary",
-  "Iceland",
-  "India",
-  "Indonesia",
-  "Iran",
-  "Iraq",
-  "Ireland",
-  "Israel",
-  "Italy",
-  "Jamaica",
-  "Japan",
-  "Jordan",
-  "Kazakhstan",
-  "Kenya",
-  "Kuwait",
-  "Latvia",
-  "Lebanon",
-  "Lithuania",
-  "Luxembourg",
-  "Malaysia",
-  "Malta",
-  "Mexico",
-  "Moldova",
-  "Monaco",
-  "Mongolia",
-  "Montenegro",
-  "Morocco",
-  "Mozambique",
-  "Myanmar",
-  "Nepal",
-  "Netherlands",
-  "New Zealand",
-  "Nicaragua",
-  "Nigeria",
-  "North Macedonia",
-  "Norway",
-  "Oman",
-  "Pakistan",
-  "Panama",
-  "Paraguay",
-  "Peru",
-  "Philippines",
-  "Poland",
-  "Portugal",
-  "Qatar",
-  "Romania",
-  "Saudi Arabia",
-  "Senegal",
-  "Serbia",
-  "Singapore",
-  "Slovakia",
-  "Slovenia",
-  "South Africa",
-  "South Korea",
-  "Spain",
-  "Sri Lanka",
-  "Sweden",
-  "Switzerland",
-  "Taiwan",
-  "Tanzania",
-  "Thailand",
-  "Tunisia",
-  "Turkey",
-  "Ukraine",
-  "United Arab Emirates",
-  "United Kingdom",
-  "United States",
-  "Uruguay",
-  "Uzbekistan",
-  "Venezuela",
-  "Vietnam",
-  "Zambia",
-  "Zimbabwe",
+const DEFAULT_BOOKING_URL = "https://calendly.com/antoine-powerintel/trellis-vi-onboarding";
+const BOOKING_URL =
+  typeof import.meta.env["VITE_BOOKING_URL"] === "string"
+    ? import.meta.env["VITE_BOOKING_URL"].trim()
+    : "";
+
+const PAIN_OPTIONS = [
+  { value: "simple", label: PAIN_LABELS.simple },
+  { value: "have_not", label: PAIN_LABELS.have_not },
+  { value: "hit_wall", label: PAIN_LABELS.hit_wall },
+  { value: "paid_service", label: PAIN_LABELS.paid_service },
 ] as const;
 
-const selectClassName =
-  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
+const TIME_OPTIONS = [
+  { value: "yes", label: TIME_LABELS.yes },
+  { value: "no", label: TIME_LABELS.no },
+] as const;
+
+const CAPITAL_YES_NO = [
+  { value: "yes", label: TIME_LABELS.yes },
+  { value: "no", label: TIME_LABELS.no },
+] as const;
+
+const BUDGET_FOLLOW_UP = [
+  { value: "plan", label: CAPITAL_LABELS.plan },
+  { value: "no", label: CAPITAL_LABELS.no },
+] as const;
+
+type Step = "contact" | "goal" | "pain" | "time" | "capital" | "budget";
+
+function previousStep(step: Step, includeContact: boolean): Step | null {
+  if (step === "budget") return "capital";
+  if (step === "capital") return "time";
+  if (step === "time") return "pain";
+  if (step === "pain") return "goal";
+  if (step === "goal" && includeContact) return "contact";
+  return null;
+}
 
 function RequiredMark() {
   return (
@@ -149,97 +69,96 @@ function RequiredMark() {
   );
 }
 
-function FieldSelect({
-  id,
-  name,
+function ChoiceButton({
+  selected,
   children,
-  defaultLabel,
+  disabled,
+  onClick,
 }: {
-  id: string;
-  name: string;
-  children: ReactNode;
-  defaultLabel?: string;
+  selected: boolean;
+  children: string;
+  disabled?: boolean;
+  onClick: () => void;
 }) {
   return (
-    <select
-      id={id}
-      name={name}
-      required
-      aria-required="true"
-      defaultValue=""
-      className={selectClassName}
+    <button
+      type="button"
+      className={`apply-choice${selected ? " is-selected" : ""}`}
+      aria-pressed={selected}
+      disabled={disabled}
+      onClick={onClick}
     >
-      <option value="" disabled>
-        {defaultLabel ?? "Select"}
-      </option>
       {children}
-    </select>
+    </button>
   );
 }
 
-const REQUIRED_FIELDS = [
-  "name",
-  "email",
-  "country",
-  "phone",
-  "job",
-  "experience",
-  "tools",
-  "commit",
-  "q1",
-  "q2",
-  "q3",
-] as const;
-
-export function ApplicationForm() {
-  const [submitting, setSubmitting] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [formKey, setFormKey] = useState(0);
+export function ApplicationForm({ compact = false }: { compact?: boolean }) {
   const sendApplication = useServerFn(submitApplication);
+  const advanceTimer = useRef<number | null>(null);
+  const idPrefix = compact ? "apply-dialog" : "apply-page";
 
-  function refreshForm() {
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setFormKey((key) => key + 1);
-    setSent(true);
-    window.setTimeout(() => setSent(false), reduced ? 500 : 2200);
-  }
+  const [mounted, setMounted] = useState(false);
+  const [includeContact, setIncludeContact] = useState(true);
+  const [step, setStep] = useState<Step>("contact");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [goal, setGoal] = useState("");
+  const [pain, setPain] = useState<Application["pain"] | "">("");
+  const [time, setTime] = useState<Application["time"] | "">("");
+  const [capital, setCapital] = useState<Application["capital"] | "">("");
+  const [capitalGate, setCapitalGate] = useState<"" | "yes" | "no">("");
+  const [submitting, setSubmitting] = useState(false);
+  const [lane, setLane] = useState<ApplicationLane | null>(null);
+  const [rejectReasons, setRejectReasons] = useState({ time: false, budget: false });
+  const answersRef = useRef({ name, email, goal, pain, time, capital });
+  answersRef.current = { name, email, goal, pain, time, capital };
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    for (const name of REQUIRED_FIELDS) {
-      const value = String(data.get(name) ?? "").trim();
-      const field = form.elements.namedItem(name);
-      if (
-        field instanceof HTMLInputElement ||
-        field instanceof HTMLTextAreaElement ||
-        field instanceof HTMLSelectElement
-      ) {
-        if (!value) {
-          field.setCustomValidity("This question is required.");
-          field.reportValidity();
-          return;
-        }
-        field.setCustomValidity("");
+  useEffect(() => {
+    function applyLead(lead: VideoLead) {
+      setName(lead.name);
+      setEmail(lead.email);
+      if (hasVideoLeadContact(lead)) {
+        setIncludeContact(false);
+        setStep((current) => (current === "contact" ? "goal" : current));
       }
     }
 
+    const stored = readVideoLead();
+    if (stored) applyLead(stored);
+    setMounted(true);
+    return subscribeVideoLead(applyLead);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    };
+  }, []);
+
+  function goTo(next: Step) {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    setStep(next);
+  }
+
+  function goBack() {
+    const previous = previousStep(step, includeContact);
+    if (!previous || submitting) return;
+    goTo(previous);
+  }
+
+  const backTo = previousStep(step, includeContact);
+
+  async function submitWith(picked: Partial<Pick<Application, "pain" | "time" | "capital">> = {}) {
+    const latest = answersRef.current;
+    const capital = picked.capital ?? latest.capital;
     const parsed = applicationSchema.safeParse({
-      name: String(data.get("name") ?? ""),
-      email: String(data.get("email") ?? ""),
-      country: String(data.get("country") ?? ""),
-      phone: String(data.get("phone") ?? ""),
-      job: String(data.get("job") ?? ""),
-      experience: String(data.get("experience") ?? ""),
-      tools: String(data.get("tools") ?? ""),
-      commit: String(data.get("commit") ?? ""),
-      q1: String(data.get("q1") ?? ""),
-      q2: String(data.get("q2") ?? ""),
-      q3: String(data.get("q3") ?? ""),
+      name: latest.name,
+      email: latest.email,
+      goal: latest.goal,
+      pain: picked.pain ?? latest.pain,
+      time: picked.time ?? latest.time,
+      ...(capital === "yes" || capital === "plan" || capital === "no" ? { capital } : {}),
     });
 
     if (!parsed.success) {
@@ -247,168 +166,428 @@ export function ApplicationForm() {
       return;
     }
 
+    const nextLane = qualifyApplication(parsed.data);
+    const reasons = unqualifiedReasons(parsed.data);
+    writeVideoLead({ name: parsed.data.name, email: parsed.data.email });
     setSubmitting(true);
-    try {
-      await sendApplication({ data: parsed.data });
-      refreshForm();
-    } catch {
-      toast.error("We could not send your application.", {
-        description: "Email trellis@powerintel.co and we will take it from there.",
-      });
-    } finally {
-      setSubmitting(false);
-    }
+
+    void sendApplication({ data: parsed.data }).catch(() => {
+      if (nextLane !== "red") {
+        toast.error("We could not send your application.", {
+          description: "Email trellis@powerintel.co and we will take it from there.",
+        });
+      }
+    });
+
+    setRejectReasons(reasons);
+    setLane(nextLane);
+    setSubmitting(false);
   }
 
-  function clearValidity(e: FormEvent<HTMLFormElement>) {
-    const target = e.target;
-    if (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target instanceof HTMLSelectElement
-    ) {
-      target.setCustomValidity("");
+  function onContact(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const nextName = name.trim();
+    const nextEmail = email.trim();
+    const nameField = e.currentTarget.elements.namedItem("name");
+    const emailField = e.currentTarget.elements.namedItem("email");
+    if (!(nameField instanceof HTMLInputElement) || !(emailField instanceof HTMLInputElement)) {
+      return;
     }
+    if (!nextName) {
+      nameField.reportValidity();
+      return;
+    }
+    if (!nextEmail || !emailField.checkValidity()) {
+      emailField.reportValidity();
+      return;
+    }
+    writeVideoLead({ name: nextName, email: nextEmail });
+    goTo("goal");
+  }
+
+  function onGoal(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!goal.trim()) {
+      const field = e.currentTarget.elements.namedItem("goal");
+      if (field instanceof HTMLTextAreaElement) field.reportValidity();
+      return;
+    }
+    goTo("pain");
+  }
+
+  if (lane) {
+    return (
+      <ApplyOutcome
+        lane={lane}
+        compact={compact}
+        reasons={rejectReasons}
+        name={name}
+        email={email}
+      />
+    );
+  }
+
+  if (!mounted) {
+    return (
+      <div
+        className={`application-form-wrap${compact ? " is-compact" : ""}`}
+        aria-hidden="true"
+      >
+        <div className="application-form space-y-6 rounded-[2.25rem] border border-border bg-card p-6 sm:p-10">
+          <div className="h-40" />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={`application-form-wrap${sent ? " is-sent" : ""}`}>
-      <form
-        key={formKey}
-        onSubmit={onSubmit}
-        onInput={clearValidity}
-        onChange={clearValidity}
-        className="application-form space-y-6 rounded-[2.25rem] border border-border bg-card p-6 sm:p-10"
-      >
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="name">
-            Full name
-            <RequiredMark />
-          </Label>
-          <Input id="name" name="name" required aria-required="true" autoComplete="name" />
+    <div className={`application-form-wrap${compact ? " is-compact" : ""}`}>
+      <div className="application-form space-y-6 rounded-[2.25rem] border border-border bg-card p-6 sm:p-10">
+        <div className="apply-step-bar">
+          <p className="apply-progress" aria-live="polite">
+            {stepLabel(step, includeContact)}
+          </p>
+          {backTo ? (
+            <button
+              type="button"
+              className="apply-back"
+              disabled={submitting}
+              onClick={goBack}
+            >
+              Back
+            </button>
+          ) : null}
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">
-            Email
-            <RequiredMark />
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            required
-            aria-required="true"
-            autoComplete="email"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="country">
-            Country
-            <RequiredMark />
-          </Label>
-          <FieldSelect id="country" name="country" defaultLabel="Select country">
-            {COUNTRIES.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </FieldSelect>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">
-            Phone
-            <RequiredMark />
-          </Label>
-          <Input id="phone" name="phone" type="tel" required aria-required="true" autoComplete="tel" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="job">
-            Job
-            <RequiredMark />
-          </Label>
-          <FieldSelect id="job" name="job">
-            <option value="employed">Employed</option>
-            <option value="freelance">Freelance</option>
-            <option value="unemployed">Unemployed</option>
-          </FieldSelect>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="experience">
-            Work experience
-            <RequiredMark />
-          </Label>
-          <FieldSelect id="experience" name="experience">
-            <option value="0-2">0-2 years</option>
-            <option value="3-5">3-5 years</option>
-            <option value="6+">6+ years</option>
-          </FieldSelect>
-        </div>
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="tools">
-          The course requires you to use Claude and Cursor. You will be responsible for having
-          them installed with a working account.
-          <RequiredMark />
-        </Label>
-        <FieldSelect id="tools" name="tools">
-          <option value="understand">I understand</option>
-          <option value="no">No</option>
-        </FieldSelect>
-      </div>
+        {step === "contact" ? (
+          <form className="apply-step space-y-8" onSubmit={onContact}>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="space-y-3">
+                <label htmlFor={`${idPrefix}-name`} className="apply-question">
+                  Full name
+                  <RequiredMark />
+                </label>
+                <Input
+                  id={`${idPrefix}-name`}
+                  name="name"
+                  required
+                  autoComplete="name"
+                  autoFocus
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-3">
+                <label htmlFor={`${idPrefix}-email`} className="apply-question">
+                  Email
+                  <RequiredMark />
+                </label>
+                <Input
+                  id={`${idPrefix}-email`}
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+            <Button type="submit" size="lg" className="w-full sm:w-auto">
+              Continue
+            </Button>
+          </form>
+        ) : null}
 
-      <div className="space-y-2">
-        <Label htmlFor="commit">
-          Are you willing to commit to the full 8 weeks?
-          <RequiredMark />
-        </Label>
-        <FieldSelect id="commit" name="commit">
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </FieldSelect>
-      </div>
+        {step === "goal" ? (
+          <form className="apply-step space-y-8" onSubmit={onGoal}>
+            <div className="apply-field-grow space-y-8">
+              <label htmlFor={`${idPrefix}-goal`} className="apply-question">
+                What are you trying to build?
+                <RequiredMark />
+              </label>
+              <Textarea
+                id={`${idPrefix}-goal`}
+                name="goal"
+                rows={5}
+                required
+                autoFocus
+                className="text-base md:text-base"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+              />
+            </div>
+            <Button type="submit" size="lg" className="w-full sm:w-auto">
+              Continue
+            </Button>
+          </form>
+        ) : null}
 
-      <div className="space-y-2">
-        <Label htmlFor="q1">
-          What have you already built with AI?
-          <RequiredMark />
-        </Label>
-        <Textarea id="q1" name="q1" rows={3} required aria-required="true" minLength={1} />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="q2">
-          Where exactly are you stuck today?
-          <RequiredMark />
-        </Label>
-        <Textarea id="q2" name="q2" rows={3} required aria-required="true" minLength={1} />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="q3">
-          What would make the next eight weeks worth it?
-          <RequiredMark />
-        </Label>
-        <Textarea id="q3" name="q3" rows={3} required aria-required="true" minLength={1} />
-      </div>
+        {step === "pain" ? (
+          <div className="apply-step space-y-8">
+            <p className="apply-question">
+              Have you tried before?
+              <RequiredMark />
+            </p>
+            <div className="apply-choices">
+              {PAIN_OPTIONS.map((option) => (
+                <ChoiceButton
+                  key={option.value}
+                  selected={pain === option.value}
+                  onClick={() => {
+                    setPain(option.value);
+                    answersRef.current.pain = option.value;
+                    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+                    advanceTimer.current = window.setTimeout(() => setStep("time"), 180);
+                  }}
+                >
+                  {option.label}
+                </ChoiceButton>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
-      <Button type="submit" size="lg" disabled={submitting} className="w-full sm:w-auto">
-        {submitting ? "Sending…" : "Submit application"}
-      </Button>
-      <p className="text-sm text-muted-foreground">
-        We review every application individually to ensure this course is the right fit for you.
-        Our goal is only to accept students who we are confident will extract real, measurable
-        value from the program.
-      </p>
-      </form>
-      <div className="application-sent" aria-live="polite" aria-atomic="true">
-        <div className="application-letter" aria-hidden="true">
-          <span className="application-letter-flap" />
-          <span className="application-letter-body">
-            <span className="application-letter-stamp">VI</span>
-            <span className="application-letter-address">Trellis VI</span>
-          </span>
+        {step === "time" ? (
+          <div className="apply-step space-y-8">
+            <p className="apply-question">
+              This requires 10–15 hours a week of focused work. Can you commit to this?
+              <RequiredMark />
+            </p>
+            <div className="apply-choices">
+              {TIME_OPTIONS.map((option) => (
+                <ChoiceButton
+                  key={option.value}
+                  selected={time === option.value}
+                  onClick={() => {
+                    setTime(option.value);
+                    answersRef.current.time = option.value;
+                    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+                    if (option.value === "no") {
+                      void submitWith({
+                        pain: answersRef.current.pain as Application["pain"],
+                        time: "no",
+                      });
+                      return;
+                    }
+                    advanceTimer.current = window.setTimeout(() => setStep("capital"), 180);
+                  }}
+                >
+                  {option.label}
+                </ChoiceButton>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {step === "capital" ? (
+          <div className="apply-step space-y-8">
+            <p className="apply-question">
+              The course costs $2,499. Are you in a position to invest this in your skills right
+              now?
+              <RequiredMark />
+            </p>
+            <div className="apply-choices">
+              {CAPITAL_YES_NO.map((option) => (
+                <ChoiceButton
+                  key={option.value}
+                  selected={capitalGate === option.value}
+                  disabled={submitting}
+                  onClick={() => {
+                    if (submitting) return;
+                    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+                    setCapitalGate(option.value);
+                    if (option.value === "yes") {
+                      setCapital("yes");
+                      answersRef.current.capital = "yes";
+                      void submitWith({
+                        pain: answersRef.current.pain as Application["pain"],
+                        time: answersRef.current.time as Application["time"],
+                        capital: "yes",
+                      });
+                      return;
+                    }
+                    setCapital("");
+                    answersRef.current.capital = "";
+                    advanceTimer.current = window.setTimeout(() => setStep("budget"), 180);
+                  }}
+                >
+                  {option.label}
+                </ChoiceButton>
+              ))}
+            </div>
+            {submitting ? (
+              <p className="text-sm text-muted-foreground">Sending your application…</p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                We review every application individually to ensure this course is the right fit.
+              </p>
+            )}
+          </div>
+        ) : null}
+
+        {step === "budget" ? (
+          <div className="apply-step space-y-8">
+            <p className="apply-question">
+              If the full investment isn't possible right now:
+              <RequiredMark />
+            </p>
+            <div className="apply-choices">
+              {BUDGET_FOLLOW_UP.map((option) => (
+                <ChoiceButton
+                  key={option.value}
+                  selected={capital === option.value}
+                  disabled={submitting}
+                  onClick={() => {
+                    if (submitting) return;
+                    setCapital(option.value);
+                    answersRef.current.capital = option.value;
+                    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+                    void submitWith({
+                      pain: answersRef.current.pain as Application["pain"],
+                      time: answersRef.current.time as Application["time"],
+                      capital: option.value,
+                    });
+                  }}
+                >
+                  {option.label}
+                </ChoiceButton>
+              ))}
+            </div>
+            {submitting ? (
+              <p className="text-sm text-muted-foreground">Sending your application…</p>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function stepLabel(step: Step, includeContact: boolean) {
+  const steps: Step[] = includeContact
+    ? ["contact", "goal", "pain", "time", "capital"]
+    : ["goal", "pain", "time", "capital"];
+  const index = step === "budget" ? steps.length - 1 : steps.indexOf(step);
+  return `${Math.max(index, 0) + 1} of ${steps.length}`;
+}
+
+function calendlyEmbedSrc(bookingUrl: string, name: string, email: string) {
+  try {
+    const url = new URL(bookingUrl);
+    url.searchParams.set("embed_type", "Inline");
+    url.searchParams.set("hide_gdpr_banner", "1");
+    const nextName = name.trim();
+    const nextEmail = email.trim();
+    if (nextName) url.searchParams.set("name", nextName);
+    if (nextEmail) url.searchParams.set("email", nextEmail);
+    return url.toString();
+  } catch {
+    return bookingUrl;
+  }
+}
+
+function ApplyOutcome({
+  lane,
+  compact,
+  reasons,
+  name,
+  email,
+}: {
+  lane: ApplicationLane;
+  compact: boolean;
+  reasons: { time: boolean; budget: boolean };
+  name: string;
+  email: string;
+}) {
+  const bookingUrl = BOOKING_URL || DEFAULT_BOOKING_URL;
+  const calendarSrc = calendlyEmbedSrc(bookingUrl, name, email);
+
+  if (lane === "green") {
+    return (
+      <div className={`application-form-wrap${compact ? " is-compact" : ""}`} data-lane="green">
+        <div className="apply-outcome rounded-[2.25rem] border border-border bg-card p-6 sm:p-10">
+          <h3 className="apply-outcome-title">You look like a great fit</h3>
+          <p className="mt-4 text-lg font-semibold leading-relaxed">
+            Book your onboarding call below.
+          </p>
+          {bookingUrl ? (
+            <iframe
+              className="apply-calendar mt-8"
+              title="Book your onboarding call"
+              src={calendarSrc}
+              loading="lazy"
+            />
+          ) : (
+            <p className="mt-8 rounded-2xl border border-border bg-secondary px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+              Calendar coming soon. We'll email you a booking link.
+            </p>
+          )}
         </div>
-        <p className="application-sent-copy">Application sent</p>
+      </div>
+    );
+  }
+
+  if (lane === "yellow") {
+    return (
+      <div className={`application-form-wrap${compact ? " is-compact" : ""}`} data-lane="yellow">
+        <div className="apply-outcome rounded-[2.25rem] border border-border bg-card p-6 sm:p-10">
+          <h3 className="apply-outcome-title">Thanks for applying</h3>
+          <p className="mt-4 text-lg font-semibold leading-relaxed">
+            Our team is reviewing your application to ensure this cohort is the right fit. We'll
+            email you within 24 hours.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`application-form-wrap${compact ? " is-compact" : ""}`} data-lane="red">
+      <div className="apply-outcome rounded-[2.25rem] border border-border bg-card p-6 sm:p-10">
+        <h3 className="apply-outcome-title">The live cohort isn't the right fit right now</h3>
+        <p className="mt-4 text-lg font-semibold leading-relaxed">
+          Based on your answers, we don't think this is the moment to join. That is not a
+          judgment of you. It is how we keep the cohort small and workable.
+        </p>
+        {reasons.time || reasons.budget ? (
+          <ul className="mt-6 space-y-3 text-base font-semibold leading-relaxed">
+            {reasons.time ? (
+              <li>
+                Trellis VI requires 10–15 hours of focused building each week. We want to make
+                sure you have the bandwidth to get the maximum value out of the cohort before
+                you jump in.
+              </li>
+            ) : null}
+            {reasons.budget ? (
+              <li>
+                At $2,499, Trellis VI is a significant investment. We only want you joining when
+                the timing and budget align perfectly, so you can focus entirely on the build
+                rather than the cost.
+              </li>
+            ) : null}
+          </ul>
+        ) : null}
+        <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+          You can still master the basics using our free resources, then apply again when the
+          time and investment line up.
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          If you still would really like to participate in the course and would like to discuss
+          your situation so we can find a solution, send an email to{" "}
+          <a href="mailto:trellis@powerintel.co" className="font-semibold text-brown hover:underline">
+            trellis@powerintel.co
+          </a>
+          .
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-6">
+          <Button asChild size="lg" className="rounded-full">
+            <Link to="/resources">Browse free resources</Link>
+          </Button>
+          <Link to="/blog" className="font-serif text-lg italic text-brown hover:underline">
+            Read the blog
+          </Link>
+        </div>
       </div>
     </div>
   );
