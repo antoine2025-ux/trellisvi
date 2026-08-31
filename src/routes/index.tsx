@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,6 +116,12 @@ const faqs: [string, string][] = [
 ];
 
 function Landing() {
+  useLayoutEffect(() => {
+    if (window.location.hash) return;
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

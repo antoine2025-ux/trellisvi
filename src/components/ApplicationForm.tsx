@@ -272,7 +272,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
                   name="name"
                   required
                   autoComplete="name"
-                  autoFocus
+                  autoFocus={compact}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -311,7 +311,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
                 name="goal"
                 rows={5}
                 required
-                autoFocus
+                autoFocus={compact}
                 className="text-base md:text-base"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
