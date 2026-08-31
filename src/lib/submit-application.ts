@@ -4,14 +4,10 @@ import {
   applicationToEmailText,
   qualifyApplication,
 } from "@/lib/application";
+import { applicantEmailFor, applicantEventName } from "@/lib/application-emails";
 
 const FROM = "Trellis VI <trellis@powerintel.co>";
 const INBOX = "trellis@powerintel.co";
-const APPLICATION_EVENT = "application.submitted";
-
-function firstName(name: string) {
-  return name.trim().split(/\s+/)[0] || "there";
-}
 
 async function resendRequest(
   apiKey: string,
@@ -43,6 +39,8 @@ export const submitApplication = createServerFn({ method: "POST" })
     }
 
     const lane = qualifyApplication(data);
+    const applicant = applicantEmailFor(data, lane);
+    const first = data.name.trim().split(/\s+/)[0] || "there";
 
     try {
       await resendRequest(apiKey, "/emails", {
@@ -58,13 +56,26 @@ export const submitApplication = createServerFn({ method: "POST" })
     }
 
     try {
-      await resendRequest(apiKey, "/events/send", {
-        event: APPLICATION_EVENT,
-        email: data.email,
-        payload: { name: firstName(data.name) },
+      await resendRequest(apiKey, "/emails", {
+        from: FROM,
+        to: [data.email],
+        reply_to: INBOX,
+        subject: applicant.subject,
+        text: applicant.text,
       });
     } catch (error) {
-      console.error("Resend rejected the application.submitted event", error);
+      console.error("Resend rejected the applicant outcome email", error);
+      throw new Error("APPLICATION_SEND_FAILED");
+    }
+
+    try {
+      await resendRequest(apiKey, "/events/send", {
+        event: applicantEventName(lane),
+        email: data.email,
+        payload: { name: first, lane },
+      });
+    } catch (error) {
+      console.error("Resend rejected the application outcome event", error);
     }
 
     return { ok: true as const };
