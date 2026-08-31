@@ -18,9 +18,16 @@ import { PrivacyPolicy, openPrivacyPolicy } from "@/components/PrivacyPolicy";
 import { Terms, openTerms } from "@/components/Terms";
 import { SiteHeader } from "@/components/SiteHeader";
 import instructorPhoto from "@/assets/instructor.jpg";
+import { homepageJsonLdScript } from "@/lib/jsonld";
 
 export const Route = createFileRoute("/")({
   head: () => ({
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: homepageJsonLdScript,
+      },
+    ],
     meta: [
       { title: "Learn to build with Trellis VI - AI assisted development course" },
       {
