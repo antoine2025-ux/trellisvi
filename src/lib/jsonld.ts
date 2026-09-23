@@ -1,6 +1,6 @@
 import { weeks } from "@/content/curriculum";
+import { SITE_URL } from "@/lib/site";
 
-const SITE_URL = "https://trellistudio.tech";
 const OG_IMAGE = `${SITE_URL}/og-hero.png`;
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;

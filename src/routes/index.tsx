@@ -19,6 +19,7 @@ import { Terms, openTerms } from "@/components/Terms";
 import { SiteHeader } from "@/components/SiteHeader";
 import instructorPhoto from "@/assets/instructor.jpg";
 import { homepageJsonLdScript } from "@/lib/jsonld";
+import { SITE_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/")({
         children: homepageJsonLdScript,
       },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     meta: [
       { title: "Learn to build with Trellis VI - AI assisted development course" },
       {
@@ -42,10 +44,10 @@ export const Route = createFileRoute("/")({
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://trellistudio.tech/" },
+      { property: "og:url", content: `${SITE_URL}/` },
       { property: "og:site_name", content: "Trellis VI" },
-      { property: "og:image", content: "https://trellistudio.tech/og-hero.png" },
-      { property: "og:image:secure_url", content: "https://trellistudio.tech/og-hero.png" },
+      { property: "og:image", content: `${SITE_URL}/og-hero.png` },
+      { property: "og:image:secure_url", content: `${SITE_URL}/og-hero.png` },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -57,7 +59,7 @@ export const Route = createFileRoute("/")({
         content:
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
       },
-      { name: "twitter:image", content: "https://trellistudio.tech/og-hero.png" },
+      { name: "twitter:image", content: `${SITE_URL}/og-hero.png` },
     ],
   }),
   component: Landing,
@@ -83,10 +85,10 @@ const outcomes: [string, string][] = [
 ];
 
 const forYou = [
-  "You're genuinely interested in AI assisted development",
-  "You want a skill you can actively monetize",
-  "You've ideally used AI to build before but hit a ceiling",
-  "You have 10-15 hours a week to commit",
+  "You have real professional experience and use AI most days",
+  "You've built with AI and hit the ceiling",
+  "You want a skill you can take to clients, or into a product role at your company",
+  "You have 10 to 15 hours a week to commit",
 ];
 
 const notForYou = [
@@ -119,7 +121,7 @@ const faqs: [string, string][] = [
   ["Do I need to know anything about programming?", "No, you don't need to be a programmer, but it does help to have basic non technical project management knowledge at minimum. If you have never touched a computer before, nor worked in any capacity that required some level of problem solving, this course may not be for you."],
   ["Are the sessions recorded?", "Yes, weekly live Q&A will be recorded with lifetime access."],
   ["What if I miss a week?", "Access to the course is open for 10 weeks from the start. The modules are relatively short, the practical work is what takes more time. Losing a week does not mean you'll be too behind to catch up, but we strongly recommend you to organize your schedule so that you can commit to the full 8 weeks without interruption."],
-  ["How large is a cohort?", "Each cohort is capped at 20 seats. This is to ensure we can support each member where needed, since the practical work will be reviewed individually."],
+  ["How large is a cohort?", "Each cohort is capped at 10 seats. This is to ensure we can support each member where needed, since the practical work will be reviewed individually."],
 ];
 
 function Landing() {
@@ -138,14 +140,11 @@ function Landing() {
         <section className="mx-auto max-w-5xl px-6 pb-20 pt-10 sm:pt-20">
           <HeroKicker />
           <h1 className="max-w-3xl text-5xl font-bold leading-[1.12] sm:text-6xl md:text-7xl">
-            Ship{" "}
-            <span className="text-word-gradient">real</span> software in 8 weeks.
-            Not another demo.
+            Everyone teaches what AI can do. We teach where it breaks.
           </h1>
           <p className="mt-8 max-w-2xl text-lg font-semibold leading-relaxed text-foreground">
-            Move past prompt engineering. Master the exact Technical Program Management
-            framework used to orchestrate AI agents, design scalable architectures, and
-            deliver custom software for high-ticket retainer clients.
+            Ship real software in 8 weeks, and know exactly why yours works when everyone
+            else's is slop.
           </p>
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Antoine Morlet.</span> Ex Wise. Ex
@@ -156,6 +155,9 @@ function Landing() {
               Apply for the next cohort
             </Button>
             <p className="mt-4 text-sm text-muted-foreground">
+              Next cohort: November. 10 seats.
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
               Limited seats. Application only.
             </p>
           </div>
@@ -273,7 +275,7 @@ function Landing() {
             </div>
             <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                I spent ten years in banking, regulatory transformation, and fintech. As a technical
+                I spent five years in banking and fintech, at Nordea and then at Wise. As a technical
                 program manager, I sat directly between the engineers and the business, translating
                 the needs of one into the language of the other.
               </p>
@@ -404,6 +406,9 @@ function Landing() {
                 </aside>
               </div>
               <p className="mt-8 text-sm text-muted-foreground">
+                Next cohort: November. 10 seats.
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Limited seats. Application only.
               </p>
             </div>

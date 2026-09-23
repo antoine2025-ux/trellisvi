@@ -205,7 +205,9 @@ export function GatedVideo() {
             <>
               <DialogHeader>
                 <DialogTitle>Apply for the next cohort</DialogTitle>
-                <DialogDescription>Limited seats. Application only.</DialogDescription>
+                <DialogDescription>
+                  Next cohort: November. 10 seats. Limited seats. Application only.
+                </DialogDescription>
               </DialogHeader>
               <ApplicationForm compact />
             </>
@@ -224,6 +226,7 @@ export function GatedVideo() {
               >
                 Apply now
               </Button>
+              <p className="text-sm text-muted-foreground">Next cohort: November. 10 seats.</p>
             </>
           )}
         </DialogContent>

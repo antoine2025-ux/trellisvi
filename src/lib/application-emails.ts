@@ -4,8 +4,8 @@ import {
   type Application,
   type ApplicationLane,
 } from "@/lib/application";
+import { SITE_URL } from "@/lib/site";
 
-const SITE = "https://www.trellistudio.tech";
 const BOOKING_URL = "https://calendly.com/antoine-powerintel/trellis-vi-onboarding";
 const INBOX = "trellis@powerintel.co";
 
@@ -119,7 +119,7 @@ export function applicantEmailFor(
       ${why.map((line) => strongP(line)).join("")}
       ${mutedP("You can still master the basics using our free resources, then apply again when the time and investment line up.")}
       ${mutedP(`If you still would really like to participate in the course and would like to discuss your situation so we can find a solution, send an email to <a href="mailto:${INBOX}" style="color:${BROWN};font-weight:700;text-decoration:none;">${INBOX}</a>.`)}
-      ${actions("Browse free resources", `${SITE}/resources`, "Read the blog", `${SITE}/blog`)}
+      ${actions("Browse free resources", `${SITE_URL}/resources`, "Read the blog", `${SITE_URL}/blog`)}
     `);
 
     return {
@@ -131,7 +131,7 @@ export function applicantEmailFor(
         "",
         ...why.flatMap((line) => [line, ""]),
         "You can still master the basics using our free resources, then apply again when the time and investment line up:",
-        `${SITE}/resources`,
+        `${SITE_URL}/resources`,
         "",
         `If you still would really like to participate in the course and would like to discuss your situation so we can find a solution, send an email to ${INBOX}.`,
         "",
@@ -148,7 +148,7 @@ export function applicantEmailFor(
       ${heading("You look like a great fit")}
       ${strongP("Based on your application, you look like a great fit for the next Trellis VI cohort.")}
       ${mutedP("Book your onboarding call below. Once you pick a time, Calendly will send you a separate email with the meeting details.")}
-      ${actions("Book your onboarding call", BOOKING_URL, "Read the blog", `${SITE}/blog`)}
+      ${actions("Book your onboarding call", BOOKING_URL, "Read the blog", `${SITE_URL}/blog`)}
     `);
 
     return {
