@@ -8,7 +8,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Reveal, StaggerStack } from "@/components/Reveal";
-import { HeroKicker } from "@/components/HeroKicker";
 import { WallSection } from "@/components/WallSection";
 import { ComparisonSection } from "@/components/ComparisonSection";
 import { WeeksTimeline } from "@/components/WeeksTimeline";
@@ -137,7 +136,6 @@ function Landing() {
       <main>
         {/* Hero */}
         <section className="mx-auto max-w-5xl px-6 pb-20 pt-10 sm:pt-20">
-          <HeroKicker />
           <h1 className="max-w-3xl text-5xl font-bold leading-[1.12] sm:text-6xl md:text-7xl">
             Ship{" "}
             <span className="text-word-gradient">real</span> software in 8 weeks.
