@@ -28,6 +28,7 @@ export const Route = createFileRoute("/")({
         children: homepageJsonLdScript,
       },
     ],
+    links: [{ rel: "canonical", href: "https://www.powerintel.co/studio/" }],
     meta: [
       { title: "Learn to build with Trellis VI - AI assisted development course" },
       {
@@ -42,10 +43,10 @@ export const Route = createFileRoute("/")({
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://trellistudio.tech/" },
+      { property: "og:url", content: "https://www.powerintel.co/studio/" },
       { property: "og:site_name", content: "Trellis VI" },
-      { property: "og:image", content: "https://trellistudio.tech/og-hero.png" },
-      { property: "og:image:secure_url", content: "https://trellistudio.tech/og-hero.png" },
+      { property: "og:image", content: "https://www.powerintel.co/studio/og-hero.png" },
+      { property: "og:image:secure_url", content: "https://www.powerintel.co/studio/og-hero.png" },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -57,7 +58,7 @@ export const Route = createFileRoute("/")({
         content:
           "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting.",
       },
-      { name: "twitter:image", content: "https://trellistudio.tech/og-hero.png" },
+      { name: "twitter:image", content: "https://www.powerintel.co/studio/og-hero.png" },
     ],
   }),
   component: Landing,
