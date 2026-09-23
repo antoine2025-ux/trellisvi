@@ -75,13 +75,9 @@ export function SiteHeader() {
           Free resources
         </Link>
         <span aria-hidden="true" className="font-normal text-muted-foreground">|</span>
-        <Link
-          to="/login"
-          className={linkClass}
-          activeProps={{ className: activeClass }}
-        >
+        <a href="https://platform.powerintel.co/login/" className={linkClass}>
           Course login
-        </Link>
+        </a>
       </nav>
     </header>
   );

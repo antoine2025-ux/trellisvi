@@ -44,8 +44,17 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function redirectBareRoot(request: Request): Response | undefined {
+  const url = new URL(request.url);
+  if (url.pathname !== "/") return undefined;
+  url.pathname = "/studio";
+  return Response.redirect(url.toString(), 307);
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const rootRedirect = redirectBareRoot(request);
+    if (rootRedirect) return rootRedirect;
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
