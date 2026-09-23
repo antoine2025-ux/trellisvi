@@ -16,7 +16,7 @@ export function Terms() {
         <h2 id="terms-title" className="legal-dialog-title">
           Terms
         </h2>
-        <p className="legal-dialog-date">Last updated 30 August 2026</p>
+        <p className="legal-dialog-date">Last updated 23 September 2026</p>
       </header>
       <div className="legal-dialog-body">
         <p>

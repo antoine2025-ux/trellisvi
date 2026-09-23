@@ -206,7 +206,7 @@ export function GatedVideo() {
               <DialogHeader>
                 <DialogTitle>Apply for the next cohort</DialogTitle>
                 <DialogDescription>
-                  Next cohort: November. 10 seats. Limited seats. Application only.
+                  Next cohort: November. 10 seats. Application only.
                 </DialogDescription>
               </DialogHeader>
               <ApplicationForm compact />
