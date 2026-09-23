@@ -88,7 +88,7 @@ export const homepageJsonLd = {
       alternateName: "Trellis VI Framework",
       description:
         "An intensive 8-week AI-assisted systems development course teaching the Technical Program Management framework to orchestrate AI agents, design scalable architectures, and deploy custom software.",
-      url: `${SITE_URL}/`,
+      url: SITE_URL,
       image: OG_IMAGE,
       inLanguage: "en",
       isAccessibleForFree: false,

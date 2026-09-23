@@ -44,6 +44,31 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+const LEGACY_HOSTS = new Set(["trellistudio.tech", "www.trellistudio.tech"]);
+
+function requestHostname(request: Request): string {
+  const header = request.headers.get("host");
+  const raw = header ?? new URL(request.url).host;
+  return raw.replace(/:\d+$/, "").toLowerCase();
+}
+
+function legacyStudioPath(pathname: string): string {
+  let path = pathname || "/";
+  if (path === "/studio" || path.startsWith("/studio/")) {
+    path = path.slice("/studio".length);
+  }
+  if (path === "" || path === "/") return "";
+  return path.startsWith("/") ? path : `/${path}`;
+}
+
+function redirectLegacyHost(request: Request): Response | undefined {
+  if (!LEGACY_HOSTS.has(requestHostname(request))) return undefined;
+  const url = new URL(request.url);
+  const target = new URL(`https://www.powerintel.co/studio${legacyStudioPath(url.pathname)}`);
+  target.search = url.search;
+  return Response.redirect(target.toString(), 301);
+}
+
 function redirectBareRoot(request: Request): Response | undefined {
   const url = new URL(request.url);
   if (url.pathname !== "/") return undefined;
@@ -53,6 +78,8 @@ function redirectBareRoot(request: Request): Response | undefined {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const legacyRedirect = redirectLegacyHost(request);
+    if (legacyRedirect) return legacyRedirect;
     const rootRedirect = redirectBareRoot(request);
     if (rootRedirect) return rootRedirect;
     try {
