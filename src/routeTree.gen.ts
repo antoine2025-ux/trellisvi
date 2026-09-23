@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BuiltRouteImport } from './routes/built'
 import { Route as CommunityRouteImport } from './routes/community'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotAFitRouteImport } from './routes/not-a-fit'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -37,11 +36,6 @@ const BuiltRoute = BuiltRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotAFitRoute = NotAFitRouteImport.update({
@@ -70,7 +64,6 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/built': typeof BuiltRoute
   '/community': typeof CommunityRoute
-  '/login': typeof LoginRoute
   '/not-a-fit': typeof NotAFitRoute
   '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -80,7 +73,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/built': typeof BuiltRoute
   '/community': typeof CommunityRoute
-  '/login': typeof LoginRoute
   '/not-a-fit': typeof NotAFitRoute
   '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -92,7 +84,6 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/built': typeof BuiltRoute
   '/community': typeof CommunityRoute
-  '/login': typeof LoginRoute
   '/not-a-fit': typeof NotAFitRoute
   '/resources': typeof ResourcesRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -105,7 +96,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/built'
     | '/community'
-    | '/login'
     | '/not-a-fit'
     | '/resources'
     | '/blog/$slug'
@@ -115,7 +105,6 @@ export interface FileRouteTypes {
     | '/'
     | '/built'
     | '/community'
-    | '/login'
     | '/not-a-fit'
     | '/resources'
     | '/blog/$slug'
@@ -126,7 +115,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/built'
     | '/community'
-    | '/login'
     | '/not-a-fit'
     | '/resources'
     | '/blog/$slug'
@@ -138,7 +126,6 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   BuiltRoute: typeof BuiltRoute
   CommunityRoute: typeof CommunityRoute
-  LoginRoute: typeof LoginRoute
   NotAFitRoute: typeof NotAFitRoute
   ResourcesRoute: typeof ResourcesRoute
 }
@@ -171,13 +158,6 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/not-a-fit': {
@@ -228,7 +208,6 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   BuiltRoute: BuiltRoute,
   CommunityRoute: CommunityRoute,
-  LoginRoute: LoginRoute,
   NotAFitRoute: NotAFitRoute,
   ResourcesRoute: ResourcesRoute,
 }
