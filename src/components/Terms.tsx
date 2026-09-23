@@ -41,7 +41,7 @@ export function Terms() {
         <p>
           Applying does not guarantee a place. We review every application and
           accept only students we believe we can support in a cohort of up to
-          20. We may refuse or withdraw an offer if the information you gave us
+          10. We may refuse or withdraw an offer if the information you gave us
           was incomplete or untrue, or if we cannot reasonably teach you in
           that intake.
         </p>
