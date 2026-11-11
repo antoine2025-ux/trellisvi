@@ -5,29 +5,10 @@ import {
   qualifyApplication,
 } from "@/lib/application";
 import { applicantEmailFor, applicantEventName } from "@/lib/application-emails";
+import { resendRequest } from "@/lib/resend";
 
 const FROM = "Trellis VI <trellis@powerintel.co>";
 const INBOX = "trellis@powerintel.co";
-
-async function resendRequest(
-  apiKey: string,
-  path: string,
-  payload: Record<string, unknown>,
-) {
-  const response = await fetch(`https://api.resend.com${path}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const detail = await response.text();
-    throw new Error(detail);
-  }
-}
 
 export const submitApplication = createServerFn({ method: "POST" })
   .validator((input: unknown) => applicationSchema.parse(input))

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Play } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { ApplicationForm } from "@/components/ApplicationForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { captureVideoLead } from "@/lib/capture-video-lead";
+import { openLegalDialog } from "@/lib/open-legal-dialog";
 import { readVideoLead, writeVideoLead } from "@/lib/video-lead";
 import { loadYouTubeApi, type YouTubePlayer } from "@/lib/youtube-api";
 
@@ -20,6 +23,7 @@ const VIDEO_ID = "aqz-KE-bpKQ";
 const POSTER = `https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`;
 
 export function GatedVideo() {
+  const captureLead = useServerFn(captureVideoLead);
   const playerHostRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
   const [unlocked, setUnlocked] = useState(false);
@@ -112,7 +116,13 @@ export function GatedVideo() {
       return;
     }
 
+    const stored = readVideoLead();
     writeVideoLead({ name: nextName, email: nextEmail });
+    if (stored?.email.toLowerCase() !== nextEmail.toLowerCase()) {
+      void captureLead({ data: { name: nextName, email: nextEmail } }).catch((error) => {
+        console.error("Video lead capture failed", error);
+      });
+    }
     setAutoplay(true);
     setUnlocked(true);
     setAsking(false);
@@ -173,6 +183,19 @@ export function GatedVideo() {
                     placeholder="you@example.com"
                   />
                 </div>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  We'll email you about Trellis VI. Unsubscribe any time.{" "}
+                  <a
+                    href="#privacy-dialog"
+                    className="underline underline-offset-2 hover:text-foreground"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openLegalDialog("privacy-dialog");
+                    }}
+                  >
+                    Privacy policy
+                  </a>
+                </p>
                 <Button type="submit" size="lg" className="w-full rounded-full">
                   Play video
                 </Button>
