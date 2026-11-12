@@ -12,7 +12,7 @@ export function PrivacyPolicy() {
         <h2 id="privacy-title" className="legal-dialog-title">
           Privacy policy
         </h2>
-        <p className="legal-dialog-date">Last updated 31 August 2026</p>
+        <p className="legal-dialog-date">Last updated 11 November 2026</p>
       </header>
       <div className="legal-dialog-body">
         <p>
@@ -40,8 +40,9 @@ export function PrivacyPolicy() {
           </li>
           <li>
             <strong>Video access.</strong> If you play the introduction video, we
-            ask for your name and email so we can unlock it and, if you apply later,
-            fill in those details for you.
+            ask for your name and email to unlock it, to fill in the application
+            form for you if you apply later, and to send you emails about Trellis
+            VI. You can unsubscribe from those emails at any time.
           </li>
           <li>
             <strong>Course communications.</strong> If you are accepted, we use

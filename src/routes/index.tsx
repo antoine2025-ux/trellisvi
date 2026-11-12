@@ -119,7 +119,7 @@ const faqs: [string, string][] = [
   ["Do I need to know anything about programming?", "No, you don't need to be a programmer, but it does help to have basic non technical project management knowledge at minimum. If you have never touched a computer before, nor worked in any capacity that required some level of problem solving, this course may not be for you."],
   ["Are the sessions recorded?", "Yes, weekly live Q&A will be recorded with lifetime access."],
   ["What if I miss a week?", "Access to the course is open for 10 weeks from the start. The modules are relatively short, the practical work is what takes more time. Losing a week does not mean you'll be too behind to catch up, but we strongly recommend you to organize your schedule so that you can commit to the full 8 weeks without interruption."],
-  ["How large is a cohort?", "Each cohort is capped at 20 seats. This is to ensure we can support each member where needed, since the practical work will be reviewed individually."],
+  ["How large is a cohort?", "Each cohort is capped at 10 seats. This is to ensure we can support each member where needed, since the practical work will be reviewed individually."],
 ];
 
 function Landing() {
@@ -156,6 +156,9 @@ function Landing() {
             </Button>
             <p className="mt-4 text-sm text-muted-foreground">
               Limited seats. Application only.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Cohort 1 starts Monday 7 December 2026. Applications close Wednesday 2 December.
             </p>
           </div>
         </section>
@@ -404,6 +407,9 @@ function Landing() {
               </div>
               <p className="mt-8 text-sm text-muted-foreground">
                 Limited seats. Application only.
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Cohort 1 starts Monday 7 December 2026. Applications close Wednesday 2 December.
               </p>
             </div>
             <ApplicationForm />
