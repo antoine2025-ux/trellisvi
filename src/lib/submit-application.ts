@@ -51,11 +51,16 @@ export const submitApplication = createServerFn({ method: "POST" })
     }
 
     try {
-      await resendRequest(apiKey, "/events/send", {
-        event: applicantEventName(lane),
-        email: data.email,
-        payload: { name: first, lane },
-      });
+      const contactsKey = process.env["RESEND_CONTACTS_API_KEY"] ?? process.env["RESEND_API_KEY"];
+      if (!contactsKey) {
+        console.error("RESEND_CONTACTS_API_KEY is not set");
+      } else {
+        await resendRequest(contactsKey, "/events/send", {
+          event: applicantEventName(lane),
+          email: data.email,
+          payload: { name: first, lane },
+        });
+      }
     } catch (error) {
       console.error("Resend rejected the application outcome event", error);
     }

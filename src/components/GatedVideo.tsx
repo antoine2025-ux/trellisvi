@@ -116,10 +116,12 @@ export function GatedVideo() {
       return;
     }
 
+    const companyField = e.currentTarget.elements.namedItem("company");
+    const company = companyField instanceof HTMLInputElement ? companyField.value : "";
     const stored = readVideoLead();
     writeVideoLead({ name: nextName, email: nextEmail });
     if (stored?.email.toLowerCase() !== nextEmail.toLowerCase()) {
-      void captureLead({ data: { name: nextName, email: nextEmail } }).catch((error) => {
+      void captureLead({ data: { name: nextName, email: nextEmail, company } }).catch((error) => {
         console.error("Video lead capture failed", error);
       });
     }
@@ -144,6 +146,15 @@ export function GatedVideo() {
             <div className="gated-video-scrim" aria-hidden="true" />
             {asking ? (
               <form className="gated-video-form" onSubmit={onSubmit}>
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="sr-only"
+                  defaultValue=""
+                />
                 <p className="gated-video-form-title">Enter your name and email to watch</p>
                 <div className="space-y-2">
                   <Label htmlFor="video-name">

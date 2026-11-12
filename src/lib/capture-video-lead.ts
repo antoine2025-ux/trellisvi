@@ -5,6 +5,7 @@ import { ResendRequestError, resendRequest } from "@/lib/resend";
 const videoLeadSchema = z.object({
   name: z.string().trim().min(1),
   email: z.string().trim().email(),
+  company: z.string().optional(),
 });
 
 function firstName(name: string) {
@@ -20,9 +21,13 @@ function isExistingContact(error: unknown) {
 export const captureVideoLead = createServerFn({ method: "POST" })
   .validator((input: unknown) => videoLeadSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env["RESEND_API_KEY"];
+    if (data.company?.trim()) {
+      return { ok: true as const };
+    }
+
+    const apiKey = process.env["RESEND_CONTACTS_API_KEY"] ?? process.env["RESEND_API_KEY"];
     if (!apiKey) {
-      console.error("RESEND_API_KEY is not set");
+      console.error("RESEND_CONTACTS_API_KEY is not set");
       return { ok: true as const };
     }
 
@@ -54,7 +59,7 @@ export const captureVideoLead = createServerFn({ method: "POST" })
       await resendRequest(apiKey, "/events/send", {
         event: "video.lead",
         email: data.email,
-        payload: { name: data.name },
+        payload: { name: first },
       });
     } catch (error) {
       console.error("Resend rejected the video lead event", error);
