@@ -5,7 +5,7 @@ import {
   type ApplicationLane,
 } from "@/lib/application";
 
-const SITE = "https://www.trellistudio.tech";
+const SITE = "https://powerintel.co/studio";
 const BOOKING_URL = "https://calendly.com/antoine-powerintel/trellis-vi-onboarding";
 const INBOX = "trellis@powerintel.co";
 

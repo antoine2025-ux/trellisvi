@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Play } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { ApplicationForm } from "@/components/ApplicationForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,15 +14,32 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { captureVideoLead } from "@/lib/capture-video-lead";
+import { openLegalDialog } from "@/lib/open-legal-dialog";
+import { loadStreamApi, type StreamPlayer } from "@/lib/stream-api";
 import { readVideoLead, writeVideoLead } from "@/lib/video-lead";
-import { loadYouTubeApi, type YouTubePlayer } from "@/lib/youtube-api";
 
-const VIDEO_ID = "aqz-KE-bpKQ";
-const POSTER = `https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`;
+const STREAM_CUSTOMER_CODE = "n4cgp5b2m1lc9wi1";
+const STREAM_VIDEO_ID = "59aa2f45504b2ec8c6bcd4f6d6f7bd02";
+const STREAM_POSTER_TIME = "10s";
+
+const STREAM_EMBED = `https://customer-${STREAM_CUSTOMER_CODE}.cloudflarestream.com/${STREAM_VIDEO_ID}`;
+const STREAM_POSTER = `${STREAM_EMBED}/thumbnails/thumbnail.jpg?time=${STREAM_POSTER_TIME}&height=720`;
+const STREAM_ALLOW = "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;";
+
+function streamSrc(autoplay: boolean) {
+  const params = new URLSearchParams({
+    poster: STREAM_POSTER,
+    defaultTextTrack: "en",
+  });
+  if (autoplay) params.set("autoplay", "true");
+  return `${STREAM_EMBED}/iframe?${params.toString()}`;
+}
 
 export function GatedVideo() {
-  const playerHostRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<YouTubePlayer | null>(null);
+  const captureLead = useServerFn(captureVideoLead);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<StreamPlayer | null>(null);
   const [unlocked, setUnlocked] = useState(false);
   const [autoplay, setAutoplay] = useState(false);
   const [asking, setAsking] = useState(false);
@@ -42,53 +60,40 @@ export function GatedVideo() {
   useEffect(() => {
     if (!unlocked) return;
 
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
     let cancelled = false;
 
-    loadYouTubeApi()
-      .then((YT) => {
-        const host = playerHostRef.current;
-        if (cancelled || !host) return;
+    const onEnded = () => {
+      try {
+        if (sessionStorage.getItem("trellis-intro-apply-prompted")) return;
+        sessionStorage.setItem("trellis-intro-apply-prompted", "1");
+      } catch {
+        // Still show the prompt if storage is blocked.
+      }
+      setPromptOpen(true);
+      setFormOpen(false);
+    };
 
-        host.replaceChildren();
-        const mount = document.createElement("div");
-        mount.style.width = "100%";
-        mount.style.height = "100%";
-        host.appendChild(mount);
+    loadStreamApi()
+      .then((Stream) => {
+        if (cancelled || iframeRef.current !== iframe) return;
 
-        playerRef.current?.destroy();
-        playerRef.current = new YT.Player(mount, {
-          videoId: VIDEO_ID,
-          width: "100%",
-          height: "100%",
-          playerVars: {
-            rel: 0,
-            autoplay: autoplay ? 1 : 0,
-            modestbranding: 1,
-            playsinline: 1,
-            origin: window.location.origin,
-          },
-          events: {
-            onStateChange: (event) => {
-              if (event.data !== YT.PlayerState.ENDED) return;
-              try {
-                if (sessionStorage.getItem("trellis-intro-apply-prompted")) return;
-                sessionStorage.setItem("trellis-intro-apply-prompted", "1");
-              } catch {
-                // Still show the prompt if storage is blocked.
-              }
-              setPromptOpen(true);
-              setFormOpen(false);
-            },
-          },
-        });
+        const player = Stream(iframe);
+        player.addEventListener("ended", onEnded);
+        playerRef.current = player;
       })
       .catch(() => {
-        // The poster/play gate still works if the API fails to load.
+        // The iframe still plays if the SDK fails to load.
       });
 
     return () => {
       cancelled = true;
-      playerRef.current?.destroy();
+      const player = playerRef.current;
+      if (!player) return;
+      player.removeEventListener("ended", onEnded);
+      player.destroy();
       playerRef.current = null;
     };
   }, [unlocked, autoplay]);
@@ -112,7 +117,15 @@ export function GatedVideo() {
       return;
     }
 
+    const companyField = e.currentTarget.elements.namedItem("company");
+    const company = companyField instanceof HTMLInputElement ? companyField.value : "";
+    const stored = readVideoLead();
     writeVideoLead({ name: nextName, email: nextEmail });
+    if (stored?.email.toLowerCase() !== nextEmail.toLowerCase()) {
+      void captureLead({ data: { name: nextName, email: nextEmail, company } }).catch((error) => {
+        console.error("Video lead capture failed", error);
+      });
+    }
     setAutoplay(true);
     setUnlocked(true);
     setAsking(false);
@@ -127,13 +140,29 @@ export function GatedVideo() {
     <>
       <div className="gated-video aspect-video w-full overflow-hidden border border-border bg-card">
         {unlocked ? (
-          <div ref={playerHostRef} className="h-full w-full" />
+          <iframe
+            ref={iframeRef}
+            className="h-full w-full"
+            src={streamSrc(autoplay)}
+            title="Introduction video"
+            allow={STREAM_ALLOW}
+            allowFullScreen
+          />
         ) : (
           <div className="gated-video-stage">
-            <img src={POSTER} alt="" className="gated-video-poster" />
+            <img src={STREAM_POSTER} alt="" className="gated-video-poster" />
             <div className="gated-video-scrim" aria-hidden="true" />
             {asking ? (
               <form className="gated-video-form" onSubmit={onSubmit}>
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="sr-only"
+                  defaultValue=""
+                />
                 <p className="gated-video-form-title">Enter your name and email to watch</p>
                 <div className="space-y-2">
                   <Label htmlFor="video-name">
@@ -173,6 +202,19 @@ export function GatedVideo() {
                     placeholder="you@example.com"
                   />
                 </div>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  We'll email you about Trellis VI. Unsubscribe any time.{" "}
+                  <a
+                    href="#privacy-dialog"
+                    className="underline underline-offset-2 hover:text-foreground"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openLegalDialog("privacy-dialog");
+                    }}
+                  >
+                    Privacy policy
+                  </a>
+                </p>
                 <Button type="submit" size="lg" className="w-full rounded-full">
                   Play video
                 </Button>
