@@ -158,7 +158,7 @@ function Landing() {
               Limited seats. Application only.
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Cohort 1 starts Monday 7 December 2026. Applications close Wednesday 2 December.
+              Cohort 1 starts Monday 11 January 2027. Applications close Wednesday 6 January 2027.
             </p>
           </div>
         </section>
@@ -409,7 +409,7 @@ function Landing() {
                 Limited seats. Application only.
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Cohort 1 starts Monday 7 December 2026. Applications close Wednesday 2 December.
+                Cohort 1 starts Monday 11 January 2027. Applications close Wednesday 6 January 2027.
               </p>
             </div>
             <ApplicationForm />
