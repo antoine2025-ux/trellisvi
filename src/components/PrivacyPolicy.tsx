@@ -64,7 +64,7 @@ export function PrivacyPolicy() {
         <h3>Why we use it</h3>
         <p>We use this information to:</p>
         <ul>
-          <li>review applications and decide who we can support in a 20-seat cohort</li>
+          <li>review applications and decide who we can support in a 10-seat cohort</li>
           <li>tell you whether you have a place, and arrange payment if you do</li>
           <li>deliver the eight live sessions, weekly review, and recordings</li>
           <li>give you access to the private community group for the life of that group</li>
