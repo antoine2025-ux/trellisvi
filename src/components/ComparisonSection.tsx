@@ -1,37 +1,6 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
-
-const rows = [
-  {
-    label: "You start with",
-    vibe: "An idea and a chat window",
-    trellis: "A data model and a system you've drawn on paper",
-  },
-  {
-    label: "You work by",
-    vibe: "Asking, reading, asking again",
-    trellis: "Directing a build across sessions, with structure that holds context",
-  },
-  {
-    label: "When it breaks",
-    vibe: "You paste the error back in and hope",
-    trellis: "You read the logs, find the cause, and tell the model what to fix",
-  },
-  {
-    label: "You ship",
-    vibe: "Something that works, built on assumptions you didn't make",
-    trellis: "A system built the way you decided it should be",
-  },
-  {
-    label: "It costs you",
-    vibe: "An afternoon",
-    trellis: "Eight weeks, fifteen hours a week",
-  },
-  {
-    label: "You end up with",
-    vibe: "A prototype",
-    trellis: "A system in production, a priced offer, and clients to send it to",
-  },
-];
+import { SectionHeader } from "@/components/landing/primitives";
+import { comparisonRows as rows } from "@/content/landing";
 
 function NapkinSketch({
   label,
@@ -109,14 +78,16 @@ export function ComparisonSection() {
   return (
     <section
       ref={ref}
-      className={`comparison-section mx-auto max-w-5xl px-6 py-20${playing ? " is-playing" : ""}`}
+      className={`comparison-section mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32${playing ? " is-playing" : ""}`}
     >
-      <h2 className="text-4xl font-bold leading-[1.12] sm:text-5xl md:text-6xl">
-        Vibecoding vs Trellis VI
-      </h2>
-      <p className="mt-3 text-muted-foreground">Same tools. A different way through the wall.</p>
+      <SectionHeader
+        index="03"
+        label="Vibe coding vs Trellis VI"
+        title="Same tools. A different way through the wall."
+        lede="Cursor, Claude and Lovable are extraordinary. The difference is who is making the decisions."
+      />
 
-      <div className="comparison-ledger mt-12">
+      <div className="comparison-ledger mt-14">
         <div className="comparison-heads" aria-hidden="true">
           <div className="comparison-head is-vibe">
             <ChatSketch />

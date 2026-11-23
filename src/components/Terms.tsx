@@ -16,7 +16,7 @@ export function Terms() {
         <h2 id="terms-title" className="legal-dialog-title">
           Terms
         </h2>
-        <p className="legal-dialog-date">Last updated 11 November 2026</p>
+        <p className="legal-dialog-date">Last updated 23 November 2026</p>
       </header>
       <div className="legal-dialog-body">
         <p>
@@ -50,7 +50,7 @@ export function Terms() {
         <p>
           You are responsible for bringing a working Claude and Cursor setup,
           a computer you can build on, and the time the course asks for —
-          typically 10 to 15 hours a week. You keep the rights to the software
+          typically 5 to 8 hours a week. You keep the rights to the software
           you build. You also keep the duty to do the work, attend the required
           sessions, and treat other members of the cohort with ordinary
           professional respect.
@@ -76,11 +76,12 @@ export function Terms() {
           eligible for a full refund.
         </p>
         <p>
-          The promised artifacts are the three Week 4 outcomes named in The
-          Guarantee on this site: a project repo wired with automated context
-          files, a custom-designed database schema running live in Supabase,
-          and a drafted offer with a defined target client and an initial
-          service package.
+          The promised artifacts are the guided project deliverables graded at
+          the Week 4 checkpoint, as described in The Guarantee on this site: a
+          project repository with its context files, one branch and pull
+          request per phase, an audit per phase, at least one architecture
+          decision record and a session summary for each session, together
+          with a live URL running the guided project.
         </p>
 
         <h3>Third-party cost exclusions</h3>

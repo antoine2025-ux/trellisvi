@@ -58,7 +58,7 @@ export const submitApplication = createServerFn({ method: "POST" })
         await resendRequest(contactsKey, "/events/send", {
           event: applicantEventName(lane),
           email: data.email,
-          payload: { name: first, lane },
+          payload: { name: first, lane, track: data.track ?? "unknown" },
         });
       }
     } catch (error) {

@@ -1,17 +1,23 @@
 import { weeks } from "@/content/curriculum";
+import { faqs } from "@/content/landing";
 
-const SITE_URL = "https://www.powerintel.co/studio";
-const OG_IMAGE = `${SITE_URL}/og-hero.png`;
+export const SITE_URL = "https://www.powerintel.co/studio";
+export const OG_IMAGE = `${SITE_URL}/og-cohort-1.png`;
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const PERSON_ID = `${SITE_URL}/#instructor`;
 const COURSE_ID = `${SITE_URL}/#course`;
 const OFFER_ID = `${SITE_URL}/#offer`;
 const INSTANCE_ID = `${SITE_URL}/#course-instance`;
+const VIDEO_ID = `${SITE_URL}/#introduction-video`;
+const FAQ_ID = `${SITE_URL}/#faq`;
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/antoinemorlet/";
 
 const ESTONIAN_REGISTER_URL = "https://ariregister.rik.ee/eng/company/16377052";
+
+const STREAM_EMBED =
+  "https://customer-n4cgp5b2m1lc9wi1.cloudflarestream.com/59aa2f45504b2ec8c6bcd4f6d6f7bd02";
 
 const offer = {
   "@type": "Offer",
@@ -20,13 +26,14 @@ const offer = {
   price: "2499",
   priceCurrency: "USD",
   availability: "https://schema.org/LimitedAvailability",
+  validThrough: "2027-01-06T23:59:59+02:00",
   url: `${SITE_URL}/#apply`,
   seller: { "@id": ORGANIZATION_ID },
 };
 
 function syllabusDescription(week: (typeof weeks)[number]) {
-  const parts = [week.shift, `Outcome: ${week.outcome}`];
-  if (week.business) parts.push(`Business Track: ${week.business}`);
+  const parts = [week.goal, `Outcome: ${week.outcome}.`];
+  if (week.business) parts.push(week.business);
   return parts.join(" ");
 }
 
@@ -84,10 +91,10 @@ export const homepageJsonLd = {
     {
       "@type": "Course",
       "@id": COURSE_ID,
-      name: "Learn to build with Trellis VI - AI assisted development course",
+      name: "Trellis VI: AI-assisted development course",
       alternateName: "Trellis VI Framework",
       description:
-        "An intensive 8-week AI-assisted systems development course teaching the Technical Program Management framework to orchestrate AI agents, design scalable architectures, and deploy custom software.",
+        "An eight-week, application-only cohort that teaches a Technical Program Management method for directing AI coding agents such as Cursor and Claude. Students build and deploy real software twice, once guided and once on their own idea, and are graded from their repository.",
       url: SITE_URL,
       image: OG_IMAGE,
       inLanguage: "en",
@@ -95,13 +102,15 @@ export const homepageJsonLd = {
       timeRequired: "P8W",
       educationalLevel: "Intermediate",
       teaches: [
-        "Technical Program Management framework for AI-assisted development",
-        "Orchestrating AI agents",
-        "Designing scalable architectures",
-        "Deploying custom software to production",
+        "Directing AI coding agents with a Technical Program Management method",
+        "Designing data models and system blueprints before code",
+        "Context engineering with repository context files",
+        "Phase-based delivery with audits, ADRs and stable seams",
+        "Deploying and debugging production software",
       ],
       about: [
         "AI-assisted development",
+        "Vibe coding",
         "Technical Program Management",
         "Systems architecture",
         "Production deployment",
@@ -109,20 +118,51 @@ export const homepageJsonLd = {
       provider: { "@id": ORGANIZATION_ID },
       instructor: { "@id": PERSON_ID },
       offers: offer,
+      video: { "@id": VIDEO_ID },
       hasCourseInstance: {
         "@type": "CourseInstance",
         "@id": INSTANCE_ID,
-        name: "Trellis VI 8-week online cohort",
+        name: "Trellis VI Cohort 1",
         courseMode: "Online",
-        courseWorkload: "PT80H",
+        startDate: "2027-01-11",
+        endDate: "2027-03-07",
+        courseWorkload: "PT64H",
+        courseSchedule: {
+          "@type": "Schedule",
+          repeatFrequency: "P1W",
+          repeatCount: 8,
+          duration: "PT1H30M",
+        },
+        maximumAttendeeCapacity: 10,
         instructor: { "@id": PERSON_ID },
         offers: offer,
       },
       syllabusSections: weeks.map((week) => ({
         "@type": "Syllabus",
-        name: `Week ${Number.parseInt(week.n, 10)}: ${week.title}`,
+        name: `Week ${week.n}: ${week.title}`,
         description: syllabusDescription(week),
         timeRequired: "P1W",
+      })),
+    },
+    {
+      "@type": "VideoObject",
+      "@id": VIDEO_ID,
+      name: "Trellis VI: what the program is, what you leave with, and who it is not for",
+      description:
+        "A 12-minute introduction to the Trellis VI cohort by Antoine Morlet: the method, the eight weeks, and who the course is not for.",
+      thumbnailUrl: `${STREAM_EMBED}/thumbnails/thumbnail.jpg?time=10s&height=720`,
+      uploadDate: "2026-11-17T16:38:07+08:00",
+      duration: "PT12M",
+      embedUrl: `${STREAM_EMBED}/iframe`,
+      publisher: { "@id": ORGANIZATION_ID },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": FAQ_ID,
+      mainEntity: faqs.map(([question, answer]) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: { "@type": "Answer", text: answer },
       })),
     },
   ],

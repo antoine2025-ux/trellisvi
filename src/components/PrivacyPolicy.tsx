@@ -12,7 +12,7 @@ export function PrivacyPolicy() {
         <h2 id="privacy-title" className="legal-dialog-title">
           Privacy policy
         </h2>
-        <p className="legal-dialog-date">Last updated 11 November 2026</p>
+        <p className="legal-dialog-date">Last updated 23 November 2026</p>
       </header>
       <div className="legal-dialog-body">
         <p>
@@ -35,8 +35,9 @@ export function PrivacyPolicy() {
         <ul>
           <li>
             <strong>Application details.</strong> Name, email, what you are trying to
-            build, whether you have built with AI before, whether you can commit 10 to
-            15 hours a week, and whether you can invest in the course now.
+            build, where you plan to use it, whether you have built with AI before,
+            whether you can commit 5 to 8 hours a week, and whether you can invest in
+            the course now.
           </li>
           <li>
             <strong>Video access.</strong> If you play the introduction video, we
@@ -81,10 +82,14 @@ export function PrivacyPolicy() {
 
         <h3>Who we share it with</h3>
         <p>
-          We do not sell your information. We share it only with people who
-          help us run Trellis VI: hosting, email, payment, and the tools we
-          use for live sessions, recordings, and the cohort group. Those
-          providers only get what they need to do that job.
+          We do not sell your information. We share it only with the services
+          that help us run Trellis VI: hosting, email (Resend), scheduling
+          (Calendly), payment, and the tools we use for live sessions,
+          recordings, and the cohort group. Those providers only get what they
+          need to do that job. When you book a call, your name and email are
+          passed to Calendly, which is based in the United States. Calendly
+          relies on the EU-U.S. Data Privacy Framework for that transfer, with
+          Standard Contractual Clauses as a fallback.
         </p>
         <p>
           Other students in your cohort will see your name and what you share

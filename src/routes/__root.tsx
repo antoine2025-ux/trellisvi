@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 
 import appCss from "../styles.css?url";
+import plexSansRegular from "../assets/fonts/IBMPlexSans-Regular.woff2?url";
+import plexSansSemiBold from "../assets/fonts/IBMPlexSans-SemiBold.woff2?url";
+import baskervilleRegular from "../assets/fonts/LibreBaskerville-Regular.woff2?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -80,11 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Learn to build with Trellis VI - AI assisted development course" },
-      { name: "description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
+      { title: "Trellis VI: AI-Assisted Development Course | 8-Week Cohort" },
+      { name: "description", content: "Learn to direct AI coding agents like an engineering team. An 8-week, application-only cohort for people who build with AI and want software that survives production." },
       { name: "author", content: "PowerIntel" },
-      { property: "og:title", content: "Learn to build with Trellis VI - AI assisted development course" },
-      { property: "og:description", content: "An application-only eight-week cohort for people who already build with AI and have hit the ceiling of prompting." },
+      { property: "og:title", content: "Trellis VI: AI-Assisted Development Course" },
+      { property: "og:description", content: "Learn to direct AI coding agents like an engineering team. An 8-week, application-only cohort for people who build with AI and want software that survives production." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -93,13 +96,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap",
-      },
-      { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.svg?v=2`, type: "image/svg+xml" },
+      ...[baskervilleRegular, plexSansRegular, plexSansSemiBold].map((href) => ({
+        rel: "preload",
+        href,
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous" as const,
+      })),
+      { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.svg?v=3`, type: "image/svg+xml" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.png?v=2`, type: "image/png", sizes: "32x32" },
       { rel: "shortcut icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.png?v=2`, type: "image/png" },
       { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}powerintel-apple-touch.png?v=2` },

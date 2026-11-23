@@ -103,7 +103,7 @@ export function applicantEmailFor(
     const why: string[] = [];
     if (reasons.time) {
       why.push(
-        "Trellis VI requires 10–15 hours of focused building each week. We want to make sure you have the bandwidth to get the maximum value out of the cohort before you jump in.",
+        "Trellis VI takes 5 to 8 hours of focused work each week, including the live sessions. We want to make sure you have the bandwidth to get the maximum value out of the cohort before you jump in.",
       );
     }
     if (reasons.budget) {
@@ -158,10 +158,9 @@ export function applicantEmailFor(
         "",
         "Based on your application, you look like a great fit for the next Trellis VI cohort.",
         "",
-        "Book your onboarding call on the calendar you just saw. Once you pick a time, Calendly will send you a separate email with the meeting details. Watch for that one. We will not send a second copy of the booking from this address.",
-        "",
-        "If you closed the page, you can book here:",
+        "Book your onboarding call here:",
         BOOKING_URL,
+        "Calendly will email you the meeting details once you pick a time.",
         "",
         `Questions? ${INBOX}`,
         "",

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const painValues = ["simple", "have_not", "hit_wall", "paid_service"] as const;
+export const trackValues = ["work", "freelance", "both"] as const;
 export const timeValues = ["yes", "no"] as const;
 export const capitalValues = ["yes", "plan", "no"] as const;
 export const laneValues = ["green", "yellow", "red"] as const;
@@ -9,6 +10,7 @@ export const applicationSchema = z.object({
   name: z.string().trim().min(1),
   email: z.string().trim().email(),
   goal: z.string().trim().min(1),
+  track: z.enum(trackValues).optional(),
   pain: z.enum(painValues),
   time: z.enum(timeValues),
   capital: z.enum(capitalValues).optional(),
@@ -22,6 +24,12 @@ export const PAIN_LABELS = {
   have_not: "Have not",
   hit_wall: "Hit a wall",
   paid_service: "I'm ready to turn my AI building into a paid service",
+} as const;
+
+export const TRACK_LABELS = {
+  work: "Inside my job or company",
+  freelance: "As a freelance or agency business",
+  both: "Both",
 } as const;
 
 export const TIME_LABELS = {
@@ -65,8 +73,9 @@ export function applicationToEmailText(data: Application, lane: ApplicationLane)
     "What are you trying to build?",
     data.goal,
     "",
+    `Where will you use it?: ${data.track ? TRACK_LABELS[data.track] : "Not asked"}`,
     `Have you tried before?: ${PAIN_LABELS[data.pain]}`,
-    `Time (10–15 hours/week): ${TIME_LABELS[data.time]}`,
+    `Time (5–8 hours/week): ${TIME_LABELS[data.time]}`,
     `Investment ($2,499): ${data.capital ? CAPITAL_LABELS[data.capital] : "Not asked"}`,
   ].join("\n");
 }
