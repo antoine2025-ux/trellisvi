@@ -103,7 +103,7 @@ export function applicantEmailFor(
     const why: string[] = [];
     if (reasons.time) {
       why.push(
-        "Trellis VI requires 10–15 hours of focused building each week. We want to make sure you have the bandwidth to get the maximum value out of the cohort before you jump in.",
+        "Trellis VI takes 5 to 8 hours of focused work each week, including the live sessions. We want to make sure you have the bandwidth to get the maximum value out of the cohort before you jump in.",
       );
     }
     if (reasons.budget) {

@@ -12,12 +12,14 @@ import {
   CAPITAL_LABELS,
   PAIN_LABELS,
   TIME_LABELS,
+  TRACK_LABELS,
   qualifyApplication,
   unqualifiedReasons,
   type Application,
   type ApplicationLane,
 } from "@/lib/application";
 import { submitApplication } from "@/lib/submit-application";
+import { trackEvent } from "@/lib/track";
 import { hasVideoLeadContact, readVideoLead, subscribeVideoLead, writeVideoLead } from "@/lib/video-lead";
 import type { VideoLead } from "@/lib/video-lead";
 
@@ -26,6 +28,12 @@ const BOOKING_URL =
   typeof import.meta.env["VITE_BOOKING_URL"] === "string"
     ? import.meta.env["VITE_BOOKING_URL"].trim()
     : "";
+
+const TRACK_OPTIONS = [
+  { value: "work", label: TRACK_LABELS.work },
+  { value: "freelance", label: TRACK_LABELS.freelance },
+  { value: "both", label: TRACK_LABELS.both },
+] as const;
 
 const PAIN_OPTIONS = [
   { value: "simple", label: PAIN_LABELS.simple },
@@ -49,13 +57,14 @@ const BUDGET_FOLLOW_UP = [
   { value: "no", label: CAPITAL_LABELS.no },
 ] as const;
 
-type Step = "contact" | "goal" | "pain" | "time" | "capital" | "budget";
+type Step = "contact" | "goal" | "track" | "pain" | "time" | "capital" | "budget";
 
 function previousStep(step: Step, includeContact: boolean): Step | null {
   if (step === "budget") return "capital";
   if (step === "capital") return "time";
   if (step === "time") return "pain";
-  if (step === "pain") return "goal";
+  if (step === "pain") return "track";
+  if (step === "track") return "goal";
   if (step === "goal" && includeContact) return "contact";
   return null;
 }
@@ -93,7 +102,13 @@ function ChoiceButton({
   );
 }
 
-export function ApplicationForm({ compact = false }: { compact?: boolean }) {
+export function ApplicationForm({
+  compact = false,
+  autoFocus = false,
+}: {
+  compact?: boolean;
+  autoFocus?: boolean;
+}) {
   const sendApplication = useServerFn(submitApplication);
   const advanceTimer = useRef<number | null>(null);
   const idPrefix = compact ? "apply-dialog" : "apply-page";
@@ -101,9 +116,12 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
   const [mounted, setMounted] = useState(false);
   const [includeContact, setIncludeContact] = useState(true);
   const [step, setStep] = useState<Step>("contact");
+  const [advanced, setAdvanced] = useState(false);
+  const stepRef = useRef<Step>("contact");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [goal, setGoal] = useState("");
+  const [track, setTrack] = useState<NonNullable<Application["track"]> | "">("");
   const [pain, setPain] = useState<Application["pain"] | "">("");
   const [time, setTime] = useState<Application["time"] | "">("");
   const [capital, setCapital] = useState<Application["capital"] | "">("");
@@ -111,16 +129,18 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
   const [submitting, setSubmitting] = useState(false);
   const [lane, setLane] = useState<ApplicationLane | null>(null);
   const [rejectReasons, setRejectReasons] = useState({ time: false, budget: false });
-  const answersRef = useRef({ name, email, goal, pain, time, capital });
-  answersRef.current = { name, email, goal, pain, time, capital };
+  const answersRef = useRef({ name, email, goal, track, pain, time, capital });
+  answersRef.current = { name, email, goal, track, pain, time, capital };
+  const stepSeen = useRef(new Set<Step>());
 
   useEffect(() => {
     function applyLead(lead: VideoLead) {
       setName(lead.name);
       setEmail(lead.email);
-      if (hasVideoLeadContact(lead)) {
+      if (hasVideoLeadContact(lead) && stepRef.current === "contact") {
         setIncludeContact(false);
-        setStep((current) => (current === "contact" ? "goal" : current));
+        stepRef.current = "goal";
+        setStep("goal");
       }
     }
 
@@ -136,8 +156,16 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mounted || stepSeen.current.has(step)) return;
+    stepSeen.current.add(step);
+    trackEvent("apply_step", { step, placement: compact ? "video" : "page" });
+  }, [mounted, step, compact]);
+
   function goTo(next: Step) {
     if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    setAdvanced(true);
+    stepRef.current = next;
     setStep(next);
   }
 
@@ -156,6 +184,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
       name: latest.name,
       email: latest.email,
       goal: latest.goal,
+      ...(latest.track ? { track: latest.track } : {}),
       pain: picked.pain ?? latest.pain,
       time: picked.time ?? latest.time,
       ...(capital === "yes" || capital === "plan" || capital === "no" ? { capital } : {}),
@@ -168,6 +197,11 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
 
     const nextLane = qualifyApplication(parsed.data);
     const reasons = unqualifiedReasons(parsed.data);
+    trackEvent("application_lane", {
+      lane: nextLane,
+      track: parsed.data.track ?? null,
+      placement: compact ? "video" : "page",
+    });
     writeVideoLead({ name: parsed.data.name, email: parsed.data.email });
     setSubmitting(true);
 
@@ -201,8 +235,8 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
       emailField.reportValidity();
       return;
     }
-    writeVideoLead({ name: nextName, email: nextEmail });
     goTo("goal");
+    writeVideoLead({ name: nextName, email: nextEmail });
   }
 
   function onGoal(e: FormEvent<HTMLFormElement>) {
@@ -212,7 +246,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
       if (field instanceof HTMLTextAreaElement) field.reportValidity();
       return;
     }
-    goTo("pain");
+    goTo("track");
   }
 
   if (lane) {
@@ -272,7 +306,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
                   name="name"
                   required
                   autoComplete="name"
-                  autoFocus={compact}
+                  autoFocus={autoFocus}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -311,7 +345,7 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
                 name="goal"
                 rows={5}
                 required
-                autoFocus={compact}
+                autoFocus={compact && (autoFocus || advanced)}
                 className="text-base md:text-base"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
@@ -321,6 +355,31 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
               Continue
             </Button>
           </form>
+        ) : null}
+
+        {step === "track" ? (
+          <div className="apply-step space-y-8">
+            <p className="apply-question">
+              Where will you use what you build?
+              <RequiredMark />
+            </p>
+            <div className="apply-choices">
+              {TRACK_OPTIONS.map((option) => (
+                <ChoiceButton
+                  key={option.value}
+                  selected={track === option.value}
+                  onClick={() => {
+                    setTrack(option.value);
+                    answersRef.current.track = option.value;
+                    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+                    advanceTimer.current = window.setTimeout(() => setStep("pain"), 180);
+                  }}
+                >
+                  {option.label}
+                </ChoiceButton>
+              ))}
+            </div>
+          </div>
         ) : null}
 
         {step === "pain" ? (
@@ -351,7 +410,8 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
         {step === "time" ? (
           <div className="apply-step space-y-8">
             <p className="apply-question">
-              This requires 10–15 hours a week of focused work. Can you commit to this?
+              This takes 5 to 8 hours a week: about an hour of video, 1.5 to 2.5 hours live, and 3
+              to 5 hours building. Can you commit to this for eight weeks?
               <RequiredMark />
             </p>
             <div className="apply-choices">
@@ -466,8 +526,8 @@ export function ApplicationForm({ compact = false }: { compact?: boolean }) {
 
 function stepLabel(step: Step, includeContact: boolean) {
   const steps: Step[] = includeContact
-    ? ["contact", "goal", "pain", "time", "capital"]
-    : ["goal", "pain", "time", "capital"];
+    ? ["contact", "goal", "track", "pain", "time", "capital"]
+    : ["goal", "track", "pain", "time", "capital"];
   const index = step === "budget" ? steps.length - 1 : steps.indexOf(step);
   return `${Math.max(index, 0) + 1} of ${steps.length}`;
 }
@@ -554,9 +614,9 @@ function ApplyOutcome({
           <ul className="mt-6 space-y-3 text-base font-semibold leading-relaxed">
             {reasons.time ? (
               <li>
-                Trellis VI requires 10–15 hours of focused building each week. We want to make
-                sure you have the bandwidth to get the maximum value out of the cohort before
-                you jump in.
+                Trellis VI takes 5 to 8 hours of focused work each week, including the live
+                sessions. We want to make sure you have the bandwidth to get the maximum value
+                out of the cohort before you jump in.
               </li>
             ) : null}
             {reasons.budget ? (
