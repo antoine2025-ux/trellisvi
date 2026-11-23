@@ -257,6 +257,7 @@ export function ApplicationForm({
         reasons={rejectReasons}
         name={name}
         email={email}
+        paymentPlan={capital === "plan"}
       />
     );
   }
@@ -385,8 +386,10 @@ export function ApplicationForm({
         {step === "pain" ? (
           <div className="apply-step space-y-8">
             <p className="apply-question">
-              Have you tried before?
-              <RequiredMark />
+              Have you tried before?&nbsp;
+              <span className="text-brown" aria-hidden="true">
+                *
+              </span>
             </p>
             <div className="apply-choices">
               {PAIN_OPTIONS.map((option) => (
@@ -410,7 +413,7 @@ export function ApplicationForm({
         {step === "time" ? (
           <div className="apply-step space-y-8">
             <p className="apply-question">
-              This takes 5 to 8 hours a week: about an hour of video, 1.5 to 2.5 hours live, and 3
+              This takes 5 to 8 hours a week: about an hour of video, 1.5 to 2 hours live, and 2.5
               to 5 hours building. Can you commit to this for eight weeks?
               <RequiredMark />
             </p>
@@ -553,12 +556,14 @@ function ApplyOutcome({
   reasons,
   name,
   email,
+  paymentPlan,
 }: {
   lane: ApplicationLane;
   compact: boolean;
   reasons: { time: boolean; budget: boolean };
   name: string;
   email: string;
+  paymentPlan: boolean;
 }) {
   const bookingUrl = BOOKING_URL || DEFAULT_BOOKING_URL;
   const calendarSrc = calendlyEmbedSrc(bookingUrl, name, email);
@@ -571,6 +576,11 @@ function ApplyOutcome({
           <p className="mt-4 text-lg font-semibold leading-relaxed">
             Book your onboarding call below.
           </p>
+          {paymentPlan ? (
+            <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+              Payment plans are confirmed on the call.
+            </p>
+          ) : null}
           {bookingUrl ? (
             <iframe
               className="apply-calendar mt-8"

@@ -292,7 +292,7 @@ export const faqs: [string, string][] = [
   ],
   [
     "How much time does it take each week?",
-    "Plan for 5 to 8 hours a week: about an hour of video, 1.5 to 2.5 hours live, and 3 to 5 hours building. Week 7 adds daily 30-minute standups.",
+    "Plan for 5 to 8 hours a week: about an hour of video, 1.5 to 2 hours live, and 2.5 to 5 hours building. Week 7 adds daily 30-minute standups.",
   ],
   [
     "What tools do we use?",

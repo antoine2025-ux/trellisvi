@@ -158,7 +158,7 @@ export function applicantEmailFor(
         "",
         "Based on your application, you look like a great fit for the next Trellis VI cohort.",
         "",
-        "Book your onboarding call on the calendar you just saw. Once you pick a time, Calendly will send you a separate email with the meeting details. Watch for that one. We will not send a second copy of the booking from this address.",
+        "Book your onboarding call below. Once you pick a time, Calendly will send you a separate email with the meeting details.",
         "",
         "If you closed the page, you can book here:",
         BOOKING_URL,
