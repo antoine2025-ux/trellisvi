@@ -82,10 +82,14 @@ export function PrivacyPolicy() {
 
         <h3>Who we share it with</h3>
         <p>
-          We do not sell your information. We share it only with people who
-          help us run Trellis VI: hosting, email, payment, and the tools we
-          use for live sessions, recordings, and the cohort group. Those
-          providers only get what they need to do that job.
+          We do not sell your information. We share it only with the services
+          that help us run Trellis VI: hosting, email (Resend), scheduling
+          (Calendly), payment, and the tools we use for live sessions,
+          recordings, and the cohort group. Those providers only get what they
+          need to do that job. When you book a call, your name and email are
+          passed to Calendly, which is based in the United States. Calendly
+          relies on the EU-U.S. Data Privacy Framework for that transfer, with
+          Standard Contractual Clauses as a fallback.
         </p>
         <p>
           Other students in your cohort will see your name and what you share
