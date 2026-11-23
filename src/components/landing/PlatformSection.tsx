@@ -21,7 +21,7 @@ function PlatformMock() {
   return (
     <div className="pm" aria-hidden="true">
       <div className="pm-rail">
-        <LogoMark inverted className="size-8" />
+        <LogoMark className="size-8 text-white" />
         <span className="pm-rail-item is-active" />
         <span className="pm-rail-item" />
         <span className="pm-rail-item" />

@@ -103,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "font/woff2",
         crossOrigin: "anonymous" as const,
       })),
-      { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.svg?v=2`, type: "image/svg+xml" },
+      { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.svg?v=3`, type: "image/svg+xml" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.png?v=2`, type: "image/png", sizes: "32x32" },
       { rel: "shortcut icon", href: `${import.meta.env.BASE_URL}powerintel-favicon.png?v=2`, type: "image/png" },
       { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}powerintel-apple-touch.png?v=2` },

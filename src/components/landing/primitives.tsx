@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import powerintelLogo from "@/assets/powerintel-logo.png";
 import { cn } from "@/lib/utils";
 
 export function Eyebrow({
@@ -154,21 +155,12 @@ export function Pill({
   return <span className={cn("pill", `pill--${tone}`, className)}>{children}</span>;
 }
 
-export function LogoMark({
-  className,
-  inverted = false,
-}: {
-  className?: string;
-  inverted?: boolean;
-}) {
-  const tile = inverted ? "var(--brown-foreground)" : "var(--ink)";
-  const mark = inverted ? "var(--ink)" : "var(--brown-foreground)";
+export function LogoMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" className={cn("logo-mark", className)} aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill={tile} />
-      <circle cx="17.2" cy="13.1" r="6.35" fill="none" stroke={mark} strokeWidth="3.15" />
-      <circle cx="17.2" cy="13.1" r="2.15" fill={mark} />
-      <path d="M12.15 17.85 6.4 27.15" stroke={mark} strokeWidth="3.15" />
-    </svg>
+    <span
+      className={cn("logo-mark", className)}
+      style={{ "--logo-src": `url(${powerintelLogo})` } as CSSProperties}
+      aria-hidden="true"
+    />
   );
 }

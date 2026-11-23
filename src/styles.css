@@ -1255,6 +1255,9 @@
 .logo-mark {
   display: block;
   flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--logo-src) center / contain no-repeat;
+  mask: var(--logo-src) center / contain no-repeat;
 }
 
 /* Cohort bar and header */
